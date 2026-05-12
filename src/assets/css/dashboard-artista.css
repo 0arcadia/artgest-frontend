@@ -1,0 +1,145 @@
+/* =============================================
+   dashboard-artista.css
+   ArtGest · Proyecto de Título 2026
+============================================= */
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.main   { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--blanco); border-bottom: 1px solid var(--borde);
+  padding: 0 2.5rem; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 10;
+}
+.topbar__izq h1 { font-family: var(--serif); font-size: 1.35rem; font-weight: 700; color: var(--negro); }
+.topbar__izq p  { font-size: 0.82rem; color: var(--gris); }
+.topbar__der    { display: flex; align-items: center; gap: 1rem; }
+.topbar__notif  {
+  position: relative; width: 38px; height: 38px; border-radius: 8px;
+  border: 1px solid var(--borde); display: flex; align-items: center; justify-content: center;
+  background: var(--blanco); cursor: pointer; transition: background 0.2s;
+}
+.topbar__notif:hover { background: var(--crema); }
+.topbar__notif svg { width: 18px; height: 18px; stroke: var(--gris-c); fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.notif-dot { position: absolute; top: 7px; right: 7px; width: 7px; height: 7px; background: var(--terra); border-radius: 50%; border: 1.5px solid var(--blanco); }
+.btn-nuevo {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.55rem 1.1rem; background: var(--terra); color: var(--blanco);
+  border-radius: 6px; font-size: 0.85rem; font-weight: 500;
+  transition: background 0.2s; text-decoration: none;
+}
+.btn-nuevo:hover { background: var(--terra-h); }
+.btn-nuevo svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ── CONTENIDO ── */
+.contenido { padding: 2.5rem; flex: 1; }
+
+/* SALUDO */
+.saludo { margin-bottom: 2.5rem; }
+.saludo__titulo { font-family: var(--serif); font-size: clamp(1.5rem,3vw,2rem); font-weight: 700; color: var(--negro); margin-bottom: 0.3rem; }
+.saludo__titulo em { font-style: italic; color: var(--terra); }
+.saludo__sub { font-size: 0.9rem; color: var(--gris-c); }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
+.stat-card {
+  background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px;
+  padding: 1.5rem; transition: box-shadow 0.2s;
+}
+.stat-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.stat-card__top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
+.stat-card__icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.icon-terra { background: var(--terra-light); } .icon-terra svg { stroke: var(--terra); }
+.icon-azul  { background: #EAF1FB; }           .icon-azul svg  { stroke: #1A5FAD; }
+.icon-verde { background: #EAF5EC; }            .icon-verde svg { stroke: #2A7A3B; }
+.icon-ambar { background: #FDF5E6; }            .icon-ambar svg { stroke: #B07B10; }
+.stat-card__icon svg { width: 18px; height: 18px; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.stat-card__delta { font-size: 0.75rem; font-weight: 500; padding: 2px 7px; border-radius: 10px; }
+.delta-pos { background: #EAF5EC; color: #2A7A3B; }
+.delta-neg { background: #FDECEA; color: #C0392B; }
+.stat-card__valor { font-family: var(--serif); font-size: 2.2rem; font-weight: 700; color: var(--negro); line-height: 1; margin-bottom: 0.25rem; }
+.stat-card__label { font-size: 0.82rem; color: var(--gris); line-height: 1.3; }
+
+/* PROGRESO */
+.progreso-wrap { margin-bottom: 1.5rem; }
+.perfil-progreso { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem 1.5rem; background: var(--terra-light); border-radius: 12px; border: 1px solid rgba(193,68,14,0.12); }
+.progreso-circle { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+.progreso-circle svg { transform: rotate(-90deg); }
+.progreso-circle__num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 600; color: var(--terra); }
+.perfil-progreso__info p:first-child { font-size: 0.88rem; font-weight: 600; color: var(--negro); margin-bottom: 0.2rem; }
+.perfil-progreso__info p:last-child  { font-size: 0.78rem; color: var(--gris-c); }
+
+/* GRID 2 COL */
+.grid-2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; }
+
+/* PANEL CARD */
+.panel-card { background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; }
+.panel-card__head { padding: 1.15rem 1.5rem; border-bottom: 1px solid var(--borde); display: flex; align-items: center; justify-content: space-between; }
+.panel-card__titulo { font-family: var(--serif); font-size: 1rem; font-weight: 700; color: var(--negro); }
+.panel-card__ver { font-size: 0.8rem; color: var(--terra); font-weight: 500; text-decoration: none; }
+.panel-card__ver:hover { text-decoration: underline; }
+.panel-card__body { padding: 1.25rem 1.5rem; }
+
+/* TABLA POSTULACIONES */
+.tabla-post { width: 100%; border-collapse: collapse; }
+.tabla-post th { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); text-align: left; border-bottom: 1px solid var(--borde); }
+.tabla-post td { font-size: 0.88rem; color: var(--gris-c); border-bottom: 1px solid var(--crema-d); vertical-align: middle; }
+.tabla-post tr:last-child td { border-bottom: none; }
+.tabla-post td:first-child { color: var(--negro); font-weight: 500; }
+
+/* BADGES */
+.badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+.badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.badge-enviada  { background: #EAF1FB; color: #1A5FAD; } .badge-enviada::before  { background: #1A5FAD; }
+.badge-revision { background: #FDF5E6; color: #B07B10; } .badge-revision::before { background: #B07B10; }
+.badge-aceptada { background: #EAF5EC; color: #2A7A3B; } .badge-aceptada::before { background: #2A7A3B; }
+.badge-rechazada{ background: #FDECEA; color: #C0392B; } .badge-rechazada::before{ background: #C0392B; }
+
+/* ACCESOS */
+.accesos { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.acceso-btn {
+  display: flex; align-items: center; gap: 0.9rem;
+  padding: 1rem 1.1rem; background: var(--crema); border: 1px solid var(--borde);
+  border-radius: 10px; transition: all 0.2s; text-decoration: none;
+}
+.acceso-btn:hover { background: var(--terra-light); border-color: var(--terra); }
+.acceso-btn__icon { width: 38px; height: 38px; border-radius: 8px; background: var(--blanco); border: 1px solid var(--borde); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; }
+.acceso-btn__titulo { font-size: 0.88rem; font-weight: 600; color: var(--negro); margin-bottom: 0.1rem; }
+.acceso-btn__sub    { font-size: 0.75rem; color: var(--gris); }
+
+/* MENSAJES */
+.msgs { display: flex; flex-direction: column; }
+.msg-item { display: flex; align-items: center; gap: 0.85rem; padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--borde); cursor: pointer; transition: background 0.15s; }
+.msg-item:last-child { border-bottom: none; }
+.msg-item:hover { background: var(--crema); }
+.msg-item.no-leido .msg-titulo { font-weight: 600; color: var(--negro); }
+.msg-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 0.78rem; font-weight: 700; color: var(--blanco); }
+.msg-info   { flex: 1; min-width: 0; }
+.msg-titulo { font-size: 0.85rem; color: var(--negro); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-preview{ font-size: 0.78rem; color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-meta   { text-align: right; flex-shrink: 0; }
+.msg-hora   { font-size: 0.72rem; color: var(--gris); margin-bottom: 0.2rem; }
+.msg-dot    { width: 8px; height: 8px; background: var(--terra); border-radius: 50%; margin-left: auto; }
+
+/* OBRAS MINI */
+.obras-mini { display: flex; flex-direction: column; gap: 0.75rem; }
+.obra-mini  { display: flex; align-items: center; gap: 0.9rem; }
+.obra-mini__thumb  { width: 48px; height: 48px; border-radius: 6px; flex-shrink: 0; }
+.obra-mini__info   { flex: 1; min-width: 0; }
+.obra-mini__titulo { font-size: 0.88rem; font-weight: 500; color: var(--negro); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.obra-mini__tecnica{ font-size: 0.75rem; color: var(--gris); }
+.obra-mini__precio { font-size: 0.82rem; font-weight: 500; color: var(--terra); flex-shrink: 0; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .grid-2     { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .layout   { grid-template-columns: 1fr; }
+  .contenido{ padding: 1.5rem; }
+  .topbar   { padding: 0 1.5rem; }
+}

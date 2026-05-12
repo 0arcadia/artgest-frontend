@@ -1,0 +1,114 @@
+/* =============================================
+   certificados.css — CertificadosView.vue
+   ArtGest · Proyecto de Título 2026
+============================================= */
+
+/* STATS */
+.stats-cert { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-bottom: 2rem; }
+.sstat { background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+.sstat__icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.icon-terra { background: var(--terra-light); } .icon-terra svg { stroke: var(--terra); }
+.icon-verde { background: #EAF5EC; }            .icon-verde svg { stroke: #2A7A3B; }
+.icon-azul  { background: #EAF1FB; }            .icon-azul  svg { stroke: #1A5FAD; }
+.icon-ambar { background: #FDF5E6; }            .icon-ambar svg { stroke: #B07B10; }
+.sstat__icon svg { width: 18px; height: 18px; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.sstat__val { font-family: var(--serif); font-size: 1.75rem; font-weight: 700; color: var(--negro); line-height: 1; }
+.sstat__lbl { font-size: 0.75rem; color: var(--gris); margin-top: 0.15rem; }
+
+/* FILTROS */
+.filtros-bar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.75rem; flex-wrap: wrap; }
+.search-wrap { position: relative; min-width: 220px; flex: 1; max-width: 300px; }
+.search-wrap input { width: 100%; padding: 0.6rem 0.9rem 0.6rem 2.2rem; background: var(--blanco); border: 1px solid var(--borde); border-radius: 8px; font-family: var(--sans); font-size: 0.85rem; color: var(--negro); outline: none; transition: border-color 0.2s; }
+.search-wrap input:focus { border-color: var(--terra); }
+.search-wrap input::placeholder { color: var(--gris); }
+.search-wrap svg { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; stroke: var(--gris); fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.filtro-select { padding: 0.6rem 0.85rem; background: var(--blanco); border: 1px solid var(--borde); border-radius: 8px; font-family: var(--sans); font-size: 0.84rem; color: var(--gris-c); outline: none; cursor: pointer; }
+.filtro-select:focus { border-color: var(--terra); }
+.filtros-bar__sep { flex: 1; }
+.filtros-cnt { font-size: 0.82rem; color: var(--gris); }
+
+/* TABLA */
+.tabla-wrap { background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; }
+.tabla { width: 100%; border-collapse: collapse; }
+.tabla th { padding: 0.9rem 1.5rem; text-align: left; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); border-bottom: 1px solid var(--borde); background: var(--crema); white-space: nowrap; }
+.tabla td { padding: 1rem 1.5rem; font-size: 0.87rem; color: var(--gris-c); border-bottom: 1px solid var(--borde); vertical-align: middle; }
+.tabla tr:last-child td { border-bottom: none; }
+.tabla tr:hover td { background: #FDFAF8; }
+.obra-cell { display: flex; align-items: center; gap: 0.75rem; }
+.obra-thumb { width: 44px; height: 44px; border-radius: 6px; flex-shrink: 0; }
+.obra-cell-titulo { font-size: 0.87rem; font-weight: 600; color: var(--negro); }
+.obra-cell-tec    { font-size: 0.73rem; color: var(--gris); }
+.code-pill { display: inline-flex; align-items: center; gap: 0.35rem; padding: 3px 9px; background: var(--crema); border: 1px solid var(--borde); border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: var(--gris-c); font-family: monospace; cursor: pointer; transition: all 0.2s; }
+.code-pill:hover { border-color: var(--terra); color: var(--terra); }
+.code-pill svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tabla-acciones { display: flex; align-items: center; gap: 0.4rem; justify-content: flex-end; }
+.accion-btn { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--borde); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; background: none; }
+.accion-btn:hover { background: var(--crema-d); }
+.accion-btn svg { width: 13px; height: 13px; stroke: var(--gris-c); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.accion-btn.terra:hover { background: var(--terra-light); border-color: rgba(193,68,14,0.3); }
+.accion-btn.terra:hover svg { stroke: var(--terra); }
+.badge { display: inline-flex; align-items: center; gap: 0.28rem; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 500; }
+.badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.b-ok { background: #EAF5EC; color: #2A7A3B; } .b-ok::before { background: #2A7A3B; }
+
+/* MODAL CERTIFICADO */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1.5rem; overflow-y: auto; }
+.cert-modal { background: var(--blanco); border-radius: 16px; width: 100%; max-width: 640px; margin: auto; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.2); }
+.cert-modal__actions { padding: 1rem 1.5rem; border-bottom: 1px solid var(--borde); display: flex; align-items: center; justify-content: space-between; background: var(--crema); }
+.cert-modal__cerrar { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--borde); display: flex; align-items: center; justify-content: center; cursor: pointer; background: var(--blanco); }
+.cert-modal__cerrar:hover { background: var(--crema-d); }
+.cert-modal__cerrar svg { width: 14px; height: 14px; stroke: var(--gris-c); fill: none; stroke-width: 2; stroke-linecap: round; }
+
+/* DOCUMENTO CERTIFICADO */
+.certificado { padding: 2.5rem; font-family: var(--serif); }
+.cert-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--negro); }
+.cert-logo { font-family: var(--serif); font-size: 1.75rem; font-weight: 800; color: var(--negro); }
+.cert-logo span { color: var(--terra); }
+.cert-logo-sub { font-family: var(--sans); font-size: 0.68rem; color: var(--gris); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.2rem; }
+.cert-qr-area { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
+.qr-svg { width: 72px; height: 72px; }
+.cert-code { font-family: monospace; font-size: 0.65rem; color: var(--gris); letter-spacing: 0.05em; }
+.cert-titulo-doc { font-family: var(--sans); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--terra); margin-bottom: 0.5rem; }
+.cert-obra-nombre { font-family: var(--serif); font-size: 1.75rem; font-weight: 800; color: var(--negro); line-height: 1.1; margin-bottom: 0.35rem; }
+.cert-artista { font-family: var(--sans); font-size: 0.95rem; color: var(--gris-c); margin-bottom: 1.5rem; }
+.cert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 2rem; margin-bottom: 1.75rem; }
+.cert-dato p:first-child { font-family: var(--sans); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gris); margin-bottom: 0.2rem; }
+.cert-dato p:last-child  { font-family: var(--sans); font-size: 0.88rem; color: var(--negro); font-weight: 500; }
+.cert-divider { height: 1px; background: var(--borde); margin: 1.5rem 0; }
+.cert-comprador-titulo { font-family: var(--sans); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--terra); margin-bottom: 0.6rem; }
+.cert-comprador-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 2rem; margin-bottom: 1.75rem; }
+.cert-firma-area { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
+.cert-firma { border-top: 1px solid var(--negro); padding-top: 0.6rem; }
+.cert-firma p:first-child { font-family: var(--serif); font-size: 0.9rem; font-weight: 700; color: var(--negro); }
+.cert-firma p:last-child  { font-family: var(--sans);  font-size: 0.72rem; color: var(--gris); }
+.cert-footer { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--borde); display: flex; align-items: center; justify-content: space-between; }
+.cert-footer p { font-family: var(--sans); font-size: 0.65rem; color: var(--gris); line-height: 1.5; }
+.cert-valido { display: inline-flex; align-items: center; gap: 0.3rem; padding: 3px 9px; background: #EAF5EC; border-radius: 20px; font-family: var(--sans); font-size: 0.7rem; font-weight: 600; color: #2A7A3B; }
+.cert-valido svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* MODAL VERIFICAR */
+.modal-ver { background: var(--blanco); border-radius: 16px; width: 100%; max-width: 440px; margin: auto; overflow: hidden; }
+.modal-ver__head { padding: 1.5rem 1.75rem 1.25rem; border-bottom: 1px solid var(--borde); display: flex; align-items: center; justify-content: space-between; }
+.modal-ver__titulo { font-family: var(--serif); font-size: 1.25rem; font-weight: 700; }
+.modal-ver__body { padding: 1.75rem; }
+.ver-desc { font-size: 0.87rem; color: var(--gris-c); line-height: 1.65; margin-bottom: 1.25rem; }
+.ver-input-wrap { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.ver-input-wrap input { flex: 1; padding: 0.75rem 1rem; background: var(--crema); border: 1px solid var(--borde); border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; color: var(--negro); outline: none; transition: border-color 0.2s; letter-spacing: 0.05em; }
+.ver-input-wrap input:focus { border-color: var(--terra); background: var(--blanco); }
+.ver-input-wrap input::placeholder { letter-spacing: normal; color: var(--gris); }
+.btn-verificar { padding: 0.75rem 1.1rem; background: var(--negro); color: var(--blanco); border-radius: 8px; font-size: 0.87rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background 0.2s; border: none; }
+.btn-verificar:hover { background: #222; }
+.ver-result { border-radius: 10px; padding: 1rem 1.25rem; font-size: 0.85rem; line-height: 1.6; }
+.ver-result.ok  { background: #EAF5EC; border: 1px solid #B5E0C0; color: #1A5A2A; }
+.ver-result.err { background: #FDECEA; border: 1px solid #F5C0C0; color: #8A2020; }
+
+/* BOTONES */
+.btn-primary { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; background: var(--terra); color: var(--blanco); border-radius: 6px; font-size: 0.84rem; font-weight: 500; transition: background 0.2s; cursor: pointer; border: none; }
+.btn-primary:hover { background: var(--terra-h); }
+.btn-primary svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.btn-sec { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: var(--blanco); color: var(--gris-c); border: 1px solid var(--borde); border-radius: 6px; font-size: 0.84rem; font-weight: 500; transition: all 0.2s; cursor: pointer; }
+.btn-sec:hover { border-color: var(--negro); color: var(--negro); }
+.btn-sec svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+/* RESPONSIVE */
+@media (max-width: 1100px) { .stats-cert { grid-template-columns: repeat(2,1fr); } }

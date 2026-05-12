@@ -1,0 +1,60 @@
+/* =============================================
+   TOKENS — Variables globales de diseño
+   ============================================= */
+:root {
+  --negro:      #0A0A0A;
+  --negro-s:    #111111;
+  --crema:      #F5F0EB;
+  --crema-d:    #EDE6DC;
+  --terra:      #C1440E;
+  --terra-h:    #A83A0C;
+  --gris:       #888888;
+  --gris-c:     #555555;
+  --blanco:     #FFFFFF;
+  --borde-o:    rgba(255,255,255,0.1);
+  --borde-c:    rgba(0,0,0,0.1);
+  --serif:      'Playfair Display', Georgia, serif;
+  --sans:       'DM Sans', system-ui, sans-serif;
+  --max:        1200px;
+}
+
+/* =============================================
+   RESET — Mínimo indispensable
+   ============================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--sans);
+  color: var(--negro);
+  background: var(--blanco);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--sans);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
