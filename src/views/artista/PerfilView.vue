@@ -5,11 +5,14 @@
     <div class="main">
       <header class="topbar">
         <div class="topbar__izq">
+          <button class="btn-volver" onclick="history.back()" title="Volver">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
           <h1>Mi perfil</h1>
           <p>Formulario 3 — Completa tu información para aparecer en más búsquedas</p>
         </div>
         <div class="topbar__der">
-          <router-link to="/portafolio/ejemplo" class="btn-sec">
+          <router-link :to="`/portafolio/${usuarioId}`" class="btn-sec">
             <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             Ver portafolio público
           </router-link>
@@ -292,6 +295,7 @@ import '@/assets/css/perfil.css'
 const inpFoto = ref(null)
 const fotoUrl = ref('')
 const fotoFile = ref(null)
+const usuarioId = ref('')
 const toastVisible = ref(false)
 const toastMsg = ref('')
 const guardando = ref(false)
@@ -325,6 +329,7 @@ const toggles = reactive([
 onMounted(async () => {
   try {
     const me = await authAPI.me()
+    usuarioId.value = me._id || me.id || ''
     form.nombre = me.nombre || ''
     form.region = me.region || ''
     form.bio = me.bio || ''

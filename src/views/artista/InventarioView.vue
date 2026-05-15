@@ -5,6 +5,9 @@
     <div class="main">
       <header class="topbar">
         <div class="topbar__izq">
+          <button class="btn-volver" onclick="history.back()" title="Volver">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
           <h1>Inventario de obras</h1>
           <p>{{ stats.total }} obras · {{ stats.vendidas }} vendidas · {{ stats.reservadas }} reservadas</p>
         </div>
@@ -68,7 +71,7 @@
         <div v-if="vista === 'grid'" class="obras-grid">
           <div class="obra-card" v-for="o in obrasFiltradas" :key="o.id">
             <div class="obra-card__img">
-              <div class="obra-card__thumb" :style="{ background: o.color }"></div>
+              <div class="obra-card__thumb" :style="{ background: o.color }" @click="abrirDetalle(o)" style="cursor:pointer;"></div>
               <div class="obra-card__badge">
                 <span class="badge" :class="badgeClass(o.disp)">{{ dispLabel(o.disp) }}</span>
               </div>
@@ -84,7 +87,7 @@
                 </button>
               </div>
             </div>
-            <div class="obra-card__body">
+            <div class="obra-card__body" @click="abrirDetalle(o)" style="cursor:pointer;">
               <p class="obra-card__titulo">{{ o.titulo }}</p>
               <p class="obra-card__tecnica">{{ o.tecnica }}{{ o.dims ? ' · ' + o.dims : '' }}</p>
               <div class="obra-card__footer">
@@ -137,6 +140,67 @@
       </div>
     </div>
 
+    <!-- MODAL DETALLE OBRA -->
+    <Teleport to="body">
+      <div class="modal-overlay" v-if="modalDetalle" @click.self="modalDetalle = false">
+        <div class="modal" style="max-width:720px;max-height:90vh;display:flex;flex-direction:column;">
+          <div class="modal__head">
+            <div>
+              <h2 class="modal__titulo">{{ obraDetalle?.titulo }}</h2>
+              <p class="modal__sub">{{ obraDetalle?.tecnica }}{{ obraDetalle?.dims ? ' · ' + obraDetalle.dims : '' }}{{ obraDetalle?.anio ? ' · ' + obraDetalle.anio : '' }}</p>
+            </div>
+            <button class="modal__cerrar" @click="modalDetalle = false">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal__body" style="overflow-y:auto;flex:1;">
+            <!-- Imagen -->
+            <div style="width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;margin-bottom:1.5rem;" :style="{ background: obraDetalle?.color || '#eee' }">
+              <img v-if="obraDetalle?.imagenUrl" :src="obraDetalle.imagenUrl" :alt="obraDetalle.titulo" style="width:100%;height:100%;object-fit:contain;background:#f5f0eb;"/>
+            </div>
+
+            <!-- Info -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem 2rem;margin-bottom:1.5rem;">
+              <div>
+                <p style="font-size:0.75rem;color:var(--gris);margin-bottom:2px;">Estado</p>
+                <span class="badge" :class="badgeClass(obraDetalle?.disp)">{{ dispLabel(obraDetalle?.disp) }}</span>
+              </div>
+              <div>
+                <p style="font-size:0.75rem;color:var(--gris);margin-bottom:2px;">Precio</p>
+                <p style="font-size:1.1rem;font-weight:700;color:var(--terra);">{{ obraDetalle?.precio > 0 ? '$' + obraDetalle.precio.toLocaleString('es-CL') : 'A consultar' }}</p>
+              </div>
+              <div v-if="obraDetalle?.serie">
+                <p style="font-size:0.75rem;color:var(--gris);margin-bottom:2px;">Serie</p>
+                <p style="font-size:0.9rem;font-weight:500;">{{ obraDetalle.serie }}</p>
+              </div>
+              <div>
+                <p style="font-size:0.75rem;color:var(--gris);margin-bottom:2px;">En portafolio</p>
+                <p style="font-size:0.9rem;font-weight:500;">{{ obraDetalle?.enPortafolio !== false ? 'Sí' : 'No' }}</p>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div v-if="obraDetalle?.desc" style="margin-bottom:1.5rem;">
+              <p style="font-size:0.75rem;color:var(--gris);margin-bottom:4px;">Descripción</p>
+              <p style="font-size:0.88rem;line-height:1.6;color:var(--negro);">{{ obraDetalle.desc }}</p>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <div></div>
+            <div style="display:flex;gap:0.75rem;">
+              <button class="btn-sec" @click="modalDetalle = false; abrirModal(obraDetalle)">
+                <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Editar
+              </button>
+              <button v-if="obraDetalle?.disp !== 'vendida'" class="btn-primary" @click="modalDetalle = false; abrirVenta(obraDetalle)">
+                Marcar vendida
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
     <!-- MODAL OBRA -->
     <Teleport to="body">
       <div class="modal-overlay" v-if="modalObra" @click.self="modalObra = false">
@@ -159,11 +223,11 @@
                   <input ref="inpImagen" type="file" accept="image/png,image/jpeg" @change="previewImagen" style="display:none"/>
                   <div v-if="!form.imagenPreview">
                     <p class="upload-area__txt">Clic para seleccionar imagen</p>
-                    <p class="upload-area__sub">PNG o JPG · Máximo 10 MB</p>
+                    <p class="upload-area__sub">PNG o JPG · Máximo 5 MB</p>
                   </div>
                   <img v-else :src="form.imagenPreview" style="max-height:120px;border-radius:6px;margin:0 auto;display:block;"/>
                 </div>
-                <span class="campo__error" v-if="errores.imagen">La imagen es obligatoria (máx. 10 MB)</span>
+                <span class="campo__error" v-if="errores.imagen">La imagen es obligatoria (máx. 5 MB)</span>
               </div>
 
               <div class="campo">
@@ -216,7 +280,7 @@
             <p style="font-size:0.8rem;color:var(--gris);">Campos con <span style="color:var(--terra)">*</span> son obligatorios</p>
             <div style="display:flex;gap:0.75rem;">
               <button class="btn-sec" @click="modalObra = false">Cancelar</button>
-              <button class="btn-primary" @click="guardarObra" :disabled="guardando">{{ guardando ? 'Guardando…' : 'Guardar obra' }}</button>
+              <button class="btn-primary" @click="guardarObra">Guardar obra</button>
             </div>
           </div>
         </div>
@@ -226,7 +290,7 @@
     <!-- MODAL VENTA -->
     <Teleport to="body">
       <div class="modal-overlay" v-if="modalVenta" @click.self="modalVenta = false">
-        <div class="modal" style="max-width:480px;max-height:90vh;display:flex;flex-direction:column;">
+        <div class="modal" style="max-width:480px;">
           <div class="modal__head">
             <div>
               <h2 class="modal__titulo">Marcar como vendida</h2>
@@ -236,7 +300,7 @@
               <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
-          <div class="modal__body" style="overflow-y:auto;flex:1;">
+          <div class="modal__body">
             <div class="venta-obra-info">
               <div class="venta-thumb" :style="{ background: obraVenta?.color }"></div>
               <div>
@@ -269,7 +333,7 @@
             <div></div>
             <div style="display:flex;gap:0.75rem;">
               <button class="btn-sec" @click="modalVenta = false">Cancelar</button>
-              <button class="btn-primary" @click="confirmarVenta" :disabled="vendiendo">{{ vendiendo ? 'Procesando…' : 'Confirmar y generar certificado' }}</button>
+              <button class="btn-primary" @click="confirmarVenta">Confirmar y generar certificado</button>
             </div>
           </div>
         </div>
@@ -351,6 +415,15 @@ const statsMini = computed(() => [
   { color:'#999',    valor: obras.value.filter(o=>o.disp==='vendida').length,    label:'Vendidas'    },
   { color:'var(--terra)', valor:'$'+obras.value.filter(o=>o.disp!=='vendida').reduce((s,o)=>s+o.precio,0).toLocaleString('es-CL'), label:'Valor disponible' },
 ])
+
+// ── MODAL DETALLE ───────────────────────────────────────
+const modalDetalle = ref(false)
+const obraDetalle  = ref(null)
+
+function abrirDetalle(obra) {
+  obraDetalle.value = obra
+  modalDetalle.value = true
+}
 
 // ── MODAL OBRA ─────────────────────────────────────────
 const modalObra  = ref(false)
@@ -474,7 +547,11 @@ async function confirmarVenta() {
     })
 
     modalVenta.value = false
-    alert(`✓ Obra vendida. Certificado generado: ${data.codigoCertificado}`)
+
+    // Abrir PDF del certificado automáticamente
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+    window.open(`${apiBase}/certificados/pdf/${data.codigoCertificado}`, '_blank')
+
     await cargarObras()
   } catch (err) {
     console.error('Error al registrar venta:', err)

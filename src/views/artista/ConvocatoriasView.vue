@@ -5,6 +5,9 @@
     <div class="main">
       <header class="topbar">
         <div class="topbar__izq">
+          <button class="btn-volver" onclick="history.back()" title="Volver">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
           <h1>Convocatorias</h1>
           <p>Encuentra fondos, residencias y oportunidades para tu obra</p>
         </div>

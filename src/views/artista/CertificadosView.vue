@@ -5,6 +5,9 @@
     <div class="main">
       <header class="topbar">
         <div class="topbar__izq">
+          <button class="btn-volver" onclick="history.back()" title="Volver">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
           <h1>Certificados de autenticidad</h1>
           <p>{{ certs.length }} certificados emitidos · todos verificables con código QR</p>
         </div>
@@ -13,7 +16,7 @@
             <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
             Verificar código QR
           </button>
-          <button class="btn-primary" @click="alert('Para generar, ve a Inventario → selecciona obra → Marcar como vendida.')">
+          <button class="btn-primary" @click="abrirModalVenta">
             <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Generar certificado
           </button>
@@ -235,13 +238,70 @@
       </div>
     </Teleport>
 
+    <!-- MODAL NUEVA VENTA -->
+    <Teleport to="body">
+      <div class="modal-overlay" v-if="modalNuevaVenta" @click.self="modalNuevaVenta = false">
+        <div class="modal" style="max-width:560px;max-height:90vh;display:flex;flex-direction:column;">
+          <div class="modal__head">
+            <div>
+              <h2 class="modal__titulo">Registrar venta y generar certificado</h2>
+              <p class="modal__sub">Selecciona la obra vendida y completa los datos del comprador</p>
+            </div>
+            <button class="modal__cerrar" @click="modalNuevaVenta = false">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal__body" style="overflow-y:auto;flex:1;">
+            <!-- Selector de obra -->
+            <div class="campo" style="margin-bottom:1.25rem;">
+              <label>Obra a vender <span style="color:var(--terra)">*</span></label>
+              <select v-model="ventaForm.obraId" style="width:100%;padding:0.6rem;border:1px solid var(--borde);border-radius:6px;font-size:0.88rem;" :class="{ err: ventaErr.obra }">
+                <option value="">Selecciona una obra…</option>
+                <option v-for="o in obrasDisponibles" :key="o.id" :value="o.id">{{ o.titulo }} — {{ o.tecnica }}</option>
+              </select>
+              <span class="campo__error" v-if="ventaErr.obra">Selecciona una obra</span>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="campo">
+                <label>Nombre comprador <span style="color:var(--terra)">*</span></label>
+                <input type="text" v-model="ventaForm.nombre" placeholder="Ej: Roberto Sánchez" :class="{ err: ventaErr.nombre }"/>
+                <span class="campo__error" v-if="ventaErr.nombre">Campo obligatorio</span>
+              </div>
+              <div class="campo">
+                <label>Email comprador <span style="color:var(--terra)">*</span></label>
+                <input type="email" v-model="ventaForm.email" placeholder="correo@email.com" :class="{ err: ventaErr.email }"/>
+                <span class="campo__error" v-if="ventaErr.email">Email válido</span>
+              </div>
+              <div class="campo" style="grid-column:1/-1;">
+                <label>Precio de venta (CLP) <span style="color:var(--terra)">*</span></label>
+                <input type="number" v-model="ventaForm.precio" placeholder="380000" :class="{ err: ventaErr.precio }"/>
+                <span class="campo__error" v-if="ventaErr.precio">Precio válido</span>
+              </div>
+            </div>
+
+            <div style="background:var(--terra-light);border-radius:8px;padding:0.85rem 1rem;margin-top:1rem;font-size:0.82rem;color:var(--terra);line-height:1.5;">
+              Al confirmar, la obra cambia a <strong>Vendida</strong> y se genera un certificado PDF con código QR verificable.
+            </div>
+          </div>
+          <div class="modal__footer">
+            <div></div>
+            <div style="display:flex;gap:0.75rem;">
+              <button class="btn-sec" @click="modalNuevaVenta = false">Cancelar</button>
+              <button class="btn-primary" @click="confirmarNuevaVenta" :disabled="registrando">{{ registrando ? 'Generando…' : 'Confirmar y generar certificado' }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import SidebarArtista from '@/components/SidebarArtista.vue'
-import { authAPI, certificadosAPI } from '@/services/api'
+import { authAPI, certificadosAPI, obrasAPI } from '@/services/api'
 import '@/assets/css/certificados.css'
 
 const modalCert = ref(false)
@@ -250,6 +310,77 @@ const certActual = ref(null)
 const codigoVer  = ref('')
 const verResult  = ref(null)
 const verificando = ref(false)
+
+// Modal nueva venta
+const modalNuevaVenta = ref(false)
+const obrasDisponibles = ref([])
+const registrando = ref(false)
+const ventaForm = ref({ obraId: '', nombre: '', email: '', precio: '' })
+const ventaErr = ref({ obra: false, nombre: false, email: false, precio: false })
+const emailRgx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+async function abrirModalVenta() {
+  try {
+    const data = await obrasAPI.listar()
+    obrasDisponibles.value = data.obras
+      .filter(o => o.estado !== 'vendida')
+      .map(o => ({ id: o._id, titulo: o.titulo, tecnica: o.tecnica, precio: o.precio }))
+  } catch (err) {
+    console.error('Error cargando obras:', err)
+  }
+  ventaForm.value = { obraId: '', nombre: '', email: '', precio: '' }
+  Object.keys(ventaErr.value).forEach(k => ventaErr.value[k] = false)
+  modalNuevaVenta.value = true
+}
+
+async function confirmarNuevaVenta() {
+  ventaErr.value.obra = !ventaForm.value.obraId
+  ventaErr.value.nombre = !ventaForm.value.nombre.trim()
+  ventaErr.value.email = !emailRgx.test(ventaForm.value.email.trim())
+  ventaErr.value.precio = !ventaForm.value.precio || ventaForm.value.precio <= 0
+  if (Object.values(ventaErr.value).some(Boolean)) return
+
+  registrando.value = true
+  try {
+    const data = await certificadosAPI.registrarVenta({
+      obraId: ventaForm.value.obraId,
+      compradorNombre: ventaForm.value.nombre.trim(),
+      compradorEmail: ventaForm.value.email.trim(),
+      precioVenta: Number(ventaForm.value.precio)
+    })
+    modalNuevaVenta.value = false
+
+    // Descargar PDF automáticamente
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+    window.open(`${apiBase}/certificados/pdf/${data.codigoCertificado}`, '_blank')
+
+    // Recargar certificados
+    const listData = await certificadosAPI.listar()
+    certs.value = listData.ventas.map(v => ({
+      id: v._id,
+      obra: v.obraId?.titulo || 'Obra',
+      tecnica: v.obraId?.tecnica || '—',
+      dims: '',
+      anio: v.obraId?.anio || '',
+      serie: '',
+      soporte: '',
+      comprador: v.compradorNombre,
+      email: v.compradorEmail || '',
+      fecha: new Date(v.fechaVenta).toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' }),
+      precio: v.precioVenta,
+      codigo: v.codigoCertificado,
+      color: v.obraId?.imagenUrl
+        ? `url(${v.obraId.imagenUrl}) center/cover`
+        : 'linear-gradient(135deg,#888,#444)'
+    }))
+  } catch (err) {
+    console.error('Error al registrar venta:', err)
+    const msg = err.response?.data?.mensaje || 'Error al registrar la venta'
+    verResult.value = { type: 'err', titulo: 'Error', detalle: msg }
+  } finally {
+    registrando.value = false
+  }
+}
 
 const filtros = ref({ buscar:'', anio:'', tecnica:'' })
 const anios   = [2026,2025,2024,2023]
@@ -313,11 +444,12 @@ function copiarCodigo(codigo) {
 
 function descargar(c) {
   if (!c) return
-  alert(`Descarga de certificado PDF de "${c.obra}" — Código: ${c.codigo}`)
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+  window.open(`${apiBase}/certificados/pdf/${c.codigo}`, '_blank')
 }
 
 function compartir(c) {
-  const url = `https://artgest.cl/verificar/${c.codigo}`
+  const url = `${window.location.origin}/verificar/${c.codigo}`
   navigator.clipboard.writeText(url)
     .then(() => alert('Enlace copiado: ' + url))
     .catch(() => alert('Enlace: ' + url))

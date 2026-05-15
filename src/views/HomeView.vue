@@ -1,14 +1,14 @@
 <template>
-  <div class="home">
+  <div class="home v-home">
 
     <!-- NAVBAR -->
     <nav class="nav" :class="{ clara: navClara }">
       <div class="nav__inner">
-        <router-link to="/" class="nav__logo">ArtGest</router-link>
+        <router-link to="/" class="nav__logo">ArteGest</router-link>
         <ul class="nav__links">
           <li><a href="#artistas" class="nav__link">Explorar artistas</a></li>
           <li><a href="#convocatorias" class="nav__link">Convocatorias</a></li>
-          <li><a href="#modulos" class="nav__link">¿Qué es ArtGest?</a></li>
+          <li><a href="#modulos" class="nav__link">¿Qué es ArteGest?</a></li>
         </ul>
         <div class="nav__der">
           <router-link to="/login" class="nav__ingresa">Iniciar sesión</router-link>
@@ -24,7 +24,7 @@
     <div class="nav__mob" :class="{ open: menuAbierto }">
       <a href="#artistas"     @click="menuAbierto = false">Explorar artistas</a>
       <a href="#convocatorias"@click="menuAbierto = false">Convocatorias</a>
-      <a href="#modulos"      @click="menuAbierto = false">¿Qué es ArtGest?</a>
+      <a href="#modulos"      @click="menuAbierto = false">¿Qué es ArteGest?</a>
       <router-link to="/login"@click="menuAbierto = false">Iniciar sesión</router-link>
       <router-link to="/login"@click="menuAbierto = false">Registrarse gratis →</router-link>
     </div>
@@ -75,7 +75,7 @@
           <h2 class="s-frase__titulo">Todo en un solo lugar.</h2>
           <p class="s-frase__desc">
             Porque administrar una carrera artística no debería consumir el tiempo
-            que necesitas para crear. ArtGest reúne todo lo que un artista visual
+            que necesitas para crear. ArteGest reúne todo lo que un artista visual
             emergente necesita para gestionar su obra, su trayectoria y sus oportunidades.
           </p>
           <a href="#modulos" class="btn btn-outline-n" style="display:inline-flex;margin:0 auto;">
@@ -105,7 +105,7 @@
               </div>
             </div>
           </div>
-          <p class="s-problema__cierre">ArtGest existe para <span>cambiar eso.</span></p>
+          <p class="s-problema__cierre">ArteGest existe para <span>cambiar eso.</span></p>
         </div>
       </section>
 
@@ -118,7 +118,7 @@
               <h2 class="s-modulos__titulo">Una herramienta hecha desde adentro del circuito</h2>
             </div>
             <p class="s-modulos__sub">
-              ArtGest nació de la experiencia de Paulette Carrasco — artista visual titulada
+              ArteGest nació de la experiencia de Paulette Carrasco — artista visual titulada
               y docente en la Universidad Diego Portales — quien conoce de primera mano las
               barreras del sistema del arte chileno.
             </p>
@@ -138,7 +138,7 @@
       <section class="s-obras reveal" id="artistas" :class="{ in: vis.artistas }">
         <div class="s-obras__inner">
           <div class="s-obras__head">
-            <h2 class="s-obras__titulo">Artistas que ya<br>confían en ArtGest</h2>
+            <h2 class="s-obras__titulo">Artistas que ya<br>confían en ArteGest</h2>
             <div class="s-obras__nav">
               <button class="carr-btn" @click="prevSlide" aria-label="Anterior">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -244,7 +244,7 @@
           </p>
           <div class="precio-tabla">
             <div class="precio-col precio-col--dest">
-              <p class="precio-col__tag">ArtGest Básico</p>
+              <p class="precio-col__tag">ArteGest Básico</p>
               <p class="precio-col__nombre">Versión gratuita</p>
               <span class="precio-col__valor">$0</span>
               <p class="precio-col__sub">Portafolio, inventario, convocatorias y certificados incluidos</p>
@@ -252,7 +252,7 @@
             <div class="precio-col">
               <p class="precio-col__tag">Alternativa actual</p>
               <p class="precio-col__nombre">Sitio web propio</p>
-              <span class="precio-col__valor precio-col__valor--gris">$300k – $900k</span>
+              <span class="precio-col__valor precio-col__valor--gris">$200k – $500k</span>
               <p class="precio-col__sub">Desarrollo + hosting anual, sin inventario ni convocatorias</p>
             </div>
           </div>
@@ -266,7 +266,7 @@
         </h2>
         <p class="s-cta__sub">
           Únete a la comunidad de artistas visuales emergentes que ya están
-          gestionando su carrera con ArtGest.
+          gestionando su carrera con ArteGest.
         </p>
         <div class="s-cta__bots">
           <router-link to="/login" class="btn btn-terra">
@@ -363,12 +363,12 @@ const currentSlide = ref(0)
 const slideOffset  = ref(0)
 
 const obras = ref([
-  { id:1, artista:'Camila Reyes Vásquez · Santiago',   titulo:'Latencia III',      tecnica:'Óleo sobre tela · 80×60 cm · 2024',      precio:'$380.000 CLP', color:'linear-gradient(160deg,#C8874A,#3D2010)', imagen: 'https://picsum.photos/id/20/400/500', },
-  { id:2, artista:'Rodrigo Fuentes · Valparaíso',      titulo:'Taller, invierno',  tecnica:'Grabado en metal · 40×30 cm · 2023',     precio:'$220.000 CLP', color:'linear-gradient(135deg,#2A3D2A,#4A6A3A)' },
-  { id:3, artista:'Valentina Montecinos · Concepción', titulo:'Forma materna III', tecnica:'Cerámica · 35×20 cm · 2024',             precio:'$450.000 CLP', color:'linear-gradient(135deg,#3D2B4A,#6A3A7A)' },
-  { id:4, artista:'Martín Saavedra · Santiago',        titulo:'Erosión digital I', tecnica:'Arte digital · 50×70 cm · 2025',         precio:'A consultar',  color:'linear-gradient(135deg,#1A1A3D,#2A3A6A)' },
-  { id:5, artista:'Isabel Contreras · Temuco',         titulo:'Raíz',              tecnica:'Acuarela · 30×40 cm · 2024',             precio:'$95.000 CLP',  color:'linear-gradient(135deg,#4A1A1A,#8A3A2A)' },
-  { id:6, artista:'Diego Pizarro · Antofagasta',       titulo:'Desierto florido',  tecnica:'Fotografía análoga · 60×90 cm · 2023',   precio:'$180.000 CLP', color:'linear-gradient(135deg,#1A3A3A,#2A6A5A)' },
+  { id:1, artista:'Camila Reyes Vásquez · Santiago',   titulo:'Latencia III',         tecnica:'Óleo sobre tela · 80×60 cm · 2024',      precio:'$380.000 CLP', color:'url(https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&q=80) center/cover' },
+  { id:2, artista:'Rodrigo Fuentes · Valparaíso',      titulo:'Taller, invierno',     tecnica:'Grabado en metal · 40×30 cm · 2023',     precio:'$220.000 CLP', color:'url(https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&q=80) center/cover' },
+  { id:3, artista:'Valentina Montecinos · Concepción', titulo:'Forma materna III',    tecnica:'Cerámica · 35×20 cm · 2024',             precio:'$450.000 CLP', color:'url(https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=80) center/cover' },
+  { id:4, artista:'Martín Saavedra · Santiago',        titulo:'Erosión digital I',    tecnica:'Arte digital · 50×70 cm · 2025',         precio:'A consultar',  color:'url(https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80) center/cover' },
+  { id:5, artista:'Isabel Contreras · Temuco',         titulo:'Raíz',                 tecnica:'Acuarela · 30×40 cm · 2024',             precio:'$95.000 CLP',  color:'url(https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&q=80) center/cover' },
+  { id:6, artista:'Diego Pizarro · Antofagasta',       titulo:'Desierto florido',     tecnica:'Fotografía análoga · 60×90 cm · 2023',   precio:'$180.000 CLP', color:'url(https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=600&q=80) center/cover' },
 ])
 
 function getVisibles() {
