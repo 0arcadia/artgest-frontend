@@ -4,8 +4,12 @@
     <!-- NAVBAR PÚBLICA -->
     <nav class="nav" :class="{ clara: navClara }">
       <div class="nav__inner">
-        <router-link to="/" class="nav__logo">ArtGest</router-link>
+        <router-link to="/" class="nav__logo">ArteGest</router-link>
+        <button onclick="history.back()" title="Volver" style="margin-left:1rem;width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
         <div class="nav__der">
+          <a href="#" onclick="history.back(); return false;" class="nav__link">← Volver</a>
           <a href="#obras" class="nav__link">Ver obras</a>
           <router-link to="/login" class="nav__btn-out">Iniciar sesión</router-link>
           <router-link to="/login" class="nav__btn-terra">Registrarse</router-link>
@@ -15,7 +19,7 @@
 
     <!-- HERO ARTISTA -->
     <section class="hero-artista">
-      <div class="hero-artista__foto"></div>
+      <div class="hero-artista__foto" :style="artista.bannerUrl ? { backgroundImage: `url(${artista.bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}"></div>
       <div class="hero-artista__inner">
         <div class="artista-avatar" v-if="!artista.fotoUrl">{{ artista.iniciales }}</div>
         <img v-else :src="artista.fotoUrl" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.3);" alt="Foto"/>
@@ -173,6 +177,7 @@ const artista = ref({
   nombre: 'Cargando…',
   iniciales: '...',
   fotoUrl: '',
+  bannerUrl: '',
   region: '',
   bio: '',
   disciplinas: [],
@@ -207,6 +212,7 @@ onMounted(async () => {
       nombre: a.nombre,
       iniciales: a.nombre ? a.nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : '??',
       fotoUrl: a.fotoUrl || '',
+      bannerUrl: a.bannerUrl || '',
       region: a.region || '',
       bio: a.bio || '',
       disciplinas: a.disciplinas || [],

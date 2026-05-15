@@ -99,6 +99,27 @@
                   </div>
                 </div>
               </div>
+
+              <!-- BANNER / IMAGEN DE FONDO -->
+              <div class="campo" style="margin-bottom:1.5rem;">
+                <label>Imagen de fondo del portafolio <span class="opt">(opcional · máx. 5 MB)</span></label>
+                <div style="position:relative;width:100%;height:120px;border-radius:10px;overflow:hidden;border:1px solid var(--borde);cursor:pointer;background:#111;" @click="$refs.inpBanner.click()">
+                  <img v-if="bannerUrl" :src="bannerUrl" style="width:100%;height:100%;object-fit:cover;"/>
+                  <div v-else style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a1a,#333);">
+                    <p style="color:rgba(255,255,255,0.4);font-size:0.85rem;">Clic para subir imagen de fondo</p>
+                  </div>
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">
+                    <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                  </div>
+                </div>
+                <input ref="inpBanner" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" @change="cargarBanner"/>
+                <div style="display:flex;gap:0.5rem;margin-top:0.5rem;" v-if="bannerUrl">
+                  <button class="fbtn fbtn-terra" @click="$refs.inpBanner.click()">Cambiar</button>
+                  <button class="fbtn fbtn-out" @click="bannerUrl = ''">Quitar</button>
+                </div>
+                <p style="font-size:0.75rem;color:var(--gris);margin-top:0.35rem;" v-if="subiendoBanner">Subiendo imagen de fondo…</p>
+              </div>
+
               <div class="form-grid">
                 <div class="campo fg-full">
                   <label>Nombre completo <span class="req">*</span></label>
@@ -296,6 +317,9 @@ const inpFoto = ref(null)
 const fotoUrl = ref('')
 const fotoFile = ref(null)
 const usuarioId = ref('')
+const bannerUrl = ref('')
+const inpBanner = ref(null)
+const subiendoBanner = ref(false)
 const toastVisible = ref(false)
 const toastMsg = ref('')
 const guardando = ref(false)
@@ -336,6 +360,7 @@ onMounted(async () => {
     form.instagram = me.instagram || ''
     form.web = me.sitioWeb || ''
     fotoUrl.value = me.fotoUrl || ''
+    bannerUrl.value = me.bannerUrl || ''
     if (me.disciplinas && me.disciplinas.length) {
       selDisc.value = new Set(me.disciplinas)
     }
@@ -376,6 +401,30 @@ function cargarFoto(e) {
   const reader = new FileReader()
   reader.onload = ev => { fotoUrl.value = ev.target.result }
   reader.readAsDataURL(file)
+}
+
+async function cargarBanner(e) {
+  const file = e.target.files[0]
+  if (!file) return
+  if (file.size > 5 * 1024 * 1024) { mostrarToast('La imagen supera 5 MB.'); return }
+
+  // Preview inmediato
+  const reader = new FileReader()
+  reader.onload = ev => { bannerUrl.value = ev.target.result }
+  reader.readAsDataURL(file)
+
+  // Subir a Cloudinary inmediatamente
+  subiendoBanner.value = true
+  try {
+    const data = await usuariosAPI.actualizarBanner(file)
+    bannerUrl.value = data.bannerUrl
+    mostrarToast('✓ Imagen de fondo actualizada.')
+  } catch (err) {
+    console.error('Error subiendo banner:', err)
+    mostrarToast('Error al subir la imagen de fondo.')
+  } finally {
+    subiendoBanner.value = false
+  }
 }
 
 function actualizarPreview() {}

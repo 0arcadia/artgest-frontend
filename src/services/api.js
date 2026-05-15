@@ -7,9 +7,9 @@ import axios from 'axios'
 
 // Instancia base de axios
 const api = axios.create({
-baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
-timeout: 15000,
-headers: { 'Content-Type': 'application/json' }
+  baseURL: 'http://localhost:3000/api',
+  timeout: 15000,
+  headers: { 'Content-Type': 'application/json' }
 })
 
 // ── INTERCEPTOR: agrega el token JWT a cada petición ──
@@ -299,6 +299,20 @@ export const usuariosAPI = {
     })
     // Actualizar localStorage con datos nuevos
     localStorage.setItem('usuario', JSON.stringify(data.usuario))
+    return data
+  },
+
+  // Actualizar imagen de fondo del perfil
+  async actualizarBanner(archivoBanner) {
+    const formData = new FormData()
+    formData.append('banner', archivoBanner)
+    const { data } = await api.put('/usuarios/banner', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    // Actualizar localStorage
+    const u = JSON.parse(localStorage.getItem('usuario') || '{}')
+    u.bannerUrl = data.bannerUrl
+    localStorage.setItem('usuario', JSON.stringify(u))
     return data
   },
 
