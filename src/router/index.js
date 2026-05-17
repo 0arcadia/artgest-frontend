@@ -8,6 +8,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView            from '@/views/HomeView.vue'
 import LoginView           from '@/views/LoginView.vue'
 import PortafolioPublicoView from '@/views/PortafolioPublicoView.vue'
+import VerificarCertificadoView from '@/views/VerificarCertificadoView.vue'
 
 // ── VISTAS ARTISTA ───────────────────────────────────
 import DashboardArtistaView from '@/views/artista/DashboardArtistaView.vue'
@@ -42,6 +43,12 @@ const routes = [
     path: '/portafolio/:id',
     name: 'portafolio-publico',
     component: PortafolioPublicoView,
+    meta: { publica: true }
+  },
+  {
+    path: '/verificar/:codigo',
+    name: 'verificar-certificado',
+    component: VerificarCertificadoView,
     meta: { publica: true }
   },
 
@@ -166,7 +173,7 @@ router.beforeEach((to, from, next) => {
   // Sin token: redirige a login
   if (!token) return next('/login')
 
-  // Ruta con perfil especifico
+  // Ruta requiere perfil específico y no coincide
   if (to.meta.perfil && to.meta.perfil !== perfil) {
     return next(perfil === 'galerista' ? '/galerista/dashboard' : '/artista/dashboard')
   }
