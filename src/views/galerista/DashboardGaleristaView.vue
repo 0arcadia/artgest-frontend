@@ -9,9 +9,23 @@
           <p>{{ fechaHoy }}</p>
         </div>
         <div class="topbar__der">
-          <div class="topbar__notif">
+          <div class="topbar__notif" @click="notifAbierta = !notifAbierta" style="position:relative;cursor:pointer;">
             <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-            <span class="notif-dot"></span>
+            <span class="notif-dot" v-if="tieneNotif"></span>
+            <!-- Dropdown notificaciones -->
+            <div class="notif-dropdown" v-if="notifAbierta" @click.stop>
+              <p class="notif-dropdown__titulo">Notificaciones</p>
+              <div class="notif-dropdown__lista">
+                <p class="notif-dropdown__vacia" v-if="notificaciones.length === 0">No tienes notificaciones nuevas.</p>
+                <div class="notif-item" v-for="n in notificaciones" :key="n.id">
+                  <div class="notif-item__dot" :style="{ background: n.color }"></div>
+                  <div>
+                    <p class="notif-item__txt" v-html="n.txt"></p>
+                    <p class="notif-item__hora">{{ n.hora }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <button class="btn-sec" @click="$router.push('/galerista/explorar')">
             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -29,12 +43,12 @@
         <!-- SALUDO -->
         <div class="saludo">
           <div class="saludo__txt">
-            <h2>Hola, <em>Galería Centro</em> 👋</h2>
+            <h2>Hola, <em>{{ nombreGaleria }}</em> 👋</h2>
             <p>Aquí tienes el resumen de tu actividad como galerista en ArtGest.</p>
           </div>
           <span class="galeria-chip">
             <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-            Santiago, RM
+            {{ regionGaleria || 'Chile' }}
           </span>
         </div>
 
@@ -59,7 +73,7 @@
           <div class="panel">
             <div class="panel__head">
               <p class="panel__titulo">Postulaciones recibidas</p>
-              <span class="panel__ver" @click="$router.push('/galerista/postulaciones')">Ver todas →</span>
+              <span class="panel__ver" @click="$router.push('/galerista/convocatorias')">Ver todas →</span>
             </div>
             <div class="post-lista">
               <div class="post-item" v-for="p in postulaciones" :key="p.id" @click="cambiarEstado(p)">
@@ -80,7 +94,7 @@
           <div class="panel">
             <div class="panel__head">
               <p class="panel__titulo">Mis convocatorias</p>
-              <span class="panel__ver">Ver todas →</span>
+              <span class="panel__ver" @click="$router.push('/galerista/convocatorias')">Ver todas →</span>
             </div>
             <div class="conv-lista-panel">
               <div class="conv-item-panel" v-for="c in convocatorias" :key="c.id">
@@ -108,16 +122,17 @@
 
           <!-- FAVORITOS -->
           <div class="panel">
-            <div class="panel__head"><p class="panel__titulo">Artistas favoritos</p><span class="panel__ver">Ver todos →</span></div>
+            <div class="panel__head"><p class="panel__titulo">Artistas favoritos</p><span class="panel__ver" @click="$router.push('/galerista/explorar')">Ver todos →</span></div>
             <div class="favs-lista">
               <div class="fav-item" v-for="f in favoritos" :key="f.nombre">
-                <div class="fav-avatar" :style="{ background: f.color }">{{ f.ini }}</div>
+                <img v-if="f.fotoUrl" :src="f.fotoUrl" class="fav-avatar-img" />
+                <div v-else class="fav-avatar" :style="{ background: f.color }">{{ f.ini }}</div>
                 <div class="fav-info">
                   <p class="fav-nombre">{{ f.nombre }}</p>
                   <p class="fav-disc">{{ f.disc }}</p>
                 </div>
                 <span class="fav-obras">{{ f.obras }} obras</span>
-                <div class="btn-msg" @click="$router.push('/galerista/mensajes')">
+                <div class="btn-msg" @click="$router.push({ path: '/galerista/mensajes', query: { nuevo: f.id } })">
                   <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                 </div>
               </div>
@@ -128,8 +143,9 @@
           <div class="panel">
             <div class="panel__head"><p class="panel__titulo">Mensajes recientes</p><span class="panel__ver" @click="$router.push('/galerista/mensajes')">Ver todos →</span></div>
             <div class="msgs">
-              <div class="msg-item" :class="{ noleido: m.noLeido }" v-for="m in mensajes" :key="m.id">
-                <div class="msg-av" :style="{ background: m.color }">{{ m.ini }}</div>
+              <div class="msg-item" :class="{ noleido: m.noLeido }" v-for="m in mensajes" :key="m.id" @click="$router.push('/galerista/mensajes')">
+                <img v-if="m.fotoUrl" :src="m.fotoUrl" class="msg-av-img" />
+                <div v-else class="msg-av" :style="{ background: m.color }">{{ m.ini }}</div>
                 <div class="msg-body">
                   <p class="msg-titulo">{{ m.nombre }}</p>
                   <p class="msg-prev">{{ m.preview }}</p>
@@ -154,7 +170,7 @@
                 </div>
                 <div class="qr-result ok" v-if="qrResult === 'ok'">
                   <strong>✓ Certificado válido</strong><br>
-                  Obra: <em>Latencia III</em> · Paulette Carrasco<br>Vendida el 12 de marzo de 2026
+                  <span v-if="qrData">Obra: <em>{{ qrData.obra?.titulo || '—' }}</em> · {{ qrData.artista?.nombre || '—' }}<br>Vendida el {{ qrData.fechaVenta ? new Date(qrData.fechaVenta).toLocaleDateString('es-CL') : '—' }}</span>
                 </div>
                 <div class="qr-result err" v-if="qrResult === 'err'">
                   <strong>✗ Código no encontrado</strong><br>
@@ -168,6 +184,9 @@
                 <div class="act-item" v-for="a in actividad" :key="a.txt">
                   <div class="act-dot" :style="{ background: a.color }"></div>
                   <div><p class="act-txt" v-html="a.txt"></p><p class="act-hora">{{ a.hora }}</p></div>
+                </div>
+                <div v-if="actividad.length === 0" style="padding:1rem 1.5rem;">
+                  <p style="font-size:0.82rem;color:var(--gris);font-style:italic;">Sin actividad reciente.</p>
                 </div>
               </div>
             </div>
@@ -216,6 +235,12 @@ import '@/assets/css/dashboard-galerista.css'
 
 const fechaHoy = new Date().toLocaleDateString('es-CL',{ weekday:'long', year:'numeric', month:'long', day:'numeric' })
 
+const nombreGaleria = ref('Galería')
+const regionGaleria = ref('')
+const notifAbierta = ref(false)
+const tieneNotif = ref(false)
+const notificaciones = ref([])
+
 const stats = ref([
   { label:'Convocatorias publicadas', valor:'0', delta:'—',  iconClass:'icon-terra', deltaClass:'delta-pos', path:'<path d="M19 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2z"/><path d="M16 2v4M8 2v4M3 10h18"/>' },
   { label:'Postulaciones recibidas',  valor:'0', delta:'—',  iconClass:'icon-azul',  deltaClass:'delta-pos', path:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>' },
@@ -230,6 +255,13 @@ const mensajes = ref([])
 const actividad = ref([])
 
 onMounted(async () => {
+  // Datos del galerista
+  const u = authAPI.getUsuario()
+  if (u) {
+    nombreGaleria.value = u.nombreGaleria || u.nombre || 'Galería'
+    regionGaleria.value = u.region || ''
+  }
+
   // Convocatorias del galerista
   try {
     const convs = await convocatoriasAPI.listar()
@@ -261,23 +293,37 @@ onMounted(async () => {
       _id: p._id
     }))
     stats.value[1].valor = String(posts.length)
+
+    // Generar notificaciones de postulaciones nuevas
+    const nuevas = posts.filter(p => p.estado === 'enviada')
+    if (nuevas.length > 0) {
+      tieneNotif.value = true
+      notificaciones.value = nuevas.slice(0, 5).map(p => ({
+        id: p._id,
+        txt: `<strong>${p.artistaId?.nombre || 'Un artista'}</strong> postuló a <strong>${p.convocatoriaId?.titulo || 'una convocatoria'}</strong>`,
+        hora: new Date(p.createdAt).toLocaleDateString('es-CL', { day:'numeric', month:'short' }),
+        color: '#C1440E'
+      }))
+    }
   } catch (err) { console.error('Error postulaciones:', err) }
 
-  // Favoritos
+  // Favoritos (con foto)
   try {
     const favs = await usuariosAPI.listarFavoritos()
     const colores = ['#C1440E', '#2A4A6A', '#3A6A2A', '#6A2A5A']
     favoritos.value = favs.map((f, i) => ({
+      id: f._id,
       ini: f.nombre ? f.nombre.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() : '??',
       color: colores[i % colores.length],
       nombre: f.nombre,
+      fotoUrl: f.fotoUrl || '',
       disc: (f.disciplinas?.join(', ') || '—') + (f.region ? ' · ' + f.region : ''),
       obras: '—'
     }))
     stats.value[2].valor = String(favs.length)
   } catch (err) { console.error('Error favoritos:', err) }
 
-  // Mensajes
+  // Mensajes (con foto)
   try {
     const convsMsgs = await mensajesAPI.conversaciones()
     const colores = ['#C1440E', '#2A4A6A', '#3A6A2A', '#6A4A2A']
@@ -286,6 +332,7 @@ onMounted(async () => {
       ini: c.otroUsuario?.nombre ? c.otroUsuario.nombre.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() : '??',
       color: colores[i % colores.length],
       nombre: c.otroUsuario?.nombre || 'Usuario',
+      fotoUrl: c.otroUsuario?.fotoUrl || '',
       preview: c.ultimoMensaje ? (c.ultimoMensaje.length > 40 ? c.ultimoMensaje.slice(0,40) + '…' : c.ultimoMensaje) : '',
       hora: new Date(c.fecha).toLocaleDateString('es-CL', { day:'numeric', month:'short' }),
       noLeido: c.noLeidos > 0
@@ -331,7 +378,6 @@ async function verificar() {
 // MODAL CONV
 const modalConv = ref(false)
 const tiposConv       = ['concurso','residencia','galeria','feria','fondart','otro']
-const tiposConvLabel  = { concurso:'Concurso', residencia:'Residencia', galeria:'Convocatoria de galería', feria:'Feria de arte', fondart:'Fondo público', otro:'Otro' }
 const disciplinasConv = ['Multidisciplinar','Pintura','Fotografía','Grabado','Escultura','Arte digital','Cerámica','Artes Visuales']
 const regionesConv    = ['Región Metropolitana','Región de Valparaíso','Región del Biobío','Región de La Araucanía','Nacional','Internacional']
 const fc    = ref({ titulo:'', tipo:'', disciplina:'', apertura:'', cierre:'', region:'', desc:'', req:'' })

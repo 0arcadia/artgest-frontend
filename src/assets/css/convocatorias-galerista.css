@@ -1,0 +1,665 @@
+/* =============================================
+   MIS CONVOCATORIAS — Panel Galerista
+   Prefijo: .v-convocatorias-gal
+   ============================================= */
+
+/* ── LAYOUT ─────────────────────────────────── */
+.v-convocatorias-gal.layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--crema);
+}
+.v-convocatorias-gal .main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+}
+
+/* ── TOPBAR ─────────────────────────────────── */
+.v-convocatorias-gal .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  background: var(--blanco);
+  border-bottom: 1px solid var(--borde-c);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+.v-convocatorias-gal .topbar__izq h1 {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--negro);
+}
+.v-convocatorias-gal .topbar__izq p {
+  font-size: 0.82rem;
+  color: var(--gris);
+  margin-top: 2px;
+}
+.v-convocatorias-gal .topbar__der {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ── BOTONES ────────────────────────────────── */
+.v-convocatorias-gal .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--terra);
+  color: var(--blanco);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: var(--sans);
+}
+.v-convocatorias-gal .btn-primary:hover { background: var(--terra-h); }
+.v-convocatorias-gal .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.v-convocatorias-gal .btn-primary svg {
+  width: 15px; height: 15px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.v-convocatorias-gal .btn-sec {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--blanco);
+  color: var(--negro);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid var(--borde-c);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--sans);
+}
+.v-convocatorias-gal .btn-sec:hover { background: var(--crema); }
+.v-convocatorias-gal .btn-sec svg {
+  width: 15px; height: 15px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.v-convocatorias-gal .btn-xs {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.72rem;
+}
+.v-convocatorias-gal .btn-xs svg {
+  width: 13px; height: 13px;
+}
+
+/* ── CONTENIDO ──────────────────────────────── */
+.v-convocatorias-gal .contenido {
+  padding: 1.5rem 2.5rem;
+  flex: 1;
+}
+
+/* ── STATS RÁPIDOS ──────────────────────────── */
+.v-convocatorias-gal .stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.v-convocatorias-gal .stat-mini {
+  background: var(--blanco);
+  border: 1px solid var(--borde-c);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+.v-convocatorias-gal .stat-mini__val {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--negro);
+}
+.v-convocatorias-gal .stat-mini__lbl {
+  font-size: 0.78rem;
+  color: var(--gris);
+  margin-top: 0.2rem;
+}
+
+/* ── FILTROS ────────────────────────────────── */
+.v-convocatorias-gal .filtros-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.v-convocatorias-gal .tabs-estado {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--blanco);
+  border: 1px solid var(--borde-c);
+  border-radius: 8px;
+  padding: 3px;
+}
+.v-convocatorias-gal .tab {
+  padding: 0.45rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--gris);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.2s;
+}
+.v-convocatorias-gal .tab:hover { color: var(--negro); }
+.v-convocatorias-gal .tab--activo {
+  background: var(--terra);
+  color: var(--blanco);
+}
+
+.v-convocatorias-gal .busqueda-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--blanco);
+  border: 1px solid var(--borde-c);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  min-width: 240px;
+}
+.v-convocatorias-gal .busqueda-wrap svg {
+  width: 16px; height: 16px;
+  stroke: var(--gris); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.v-convocatorias-gal .busqueda-wrap input {
+  border: none; outline: none;
+  font-size: 0.85rem;
+  font-family: var(--sans);
+  color: var(--negro);
+  background: transparent;
+  width: 100%;
+}
+.v-convocatorias-gal .busqueda-wrap input::placeholder { color: var(--gris); }
+
+/* ── LISTA CONVOCATORIAS ────────────────────── */
+.v-convocatorias-gal .conv-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── CARD CONVOCATORIA ──────────────────────── */
+.v-convocatorias-gal .conv-card {
+  background: var(--blanco);
+  border: 1px solid var(--borde-c);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.v-convocatorias-gal .conv-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.v-convocatorias-gal .conv-card--expandida { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+.v-convocatorias-gal .conv-card__main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  gap: 1rem;
+}
+
+.v-convocatorias-gal .conv-card__izq {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+.v-convocatorias-gal .conv-card__icono {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.v-convocatorias-gal .conv-card__icono svg {
+  width: 20px; height: 20px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.v-convocatorias-gal .icono-activa { background: rgba(58,106,42,0.1); color: #3A6A2A; }
+.v-convocatorias-gal .icono-urgente { background: rgba(193,68,14,0.1); color: var(--terra); }
+.v-convocatorias-gal .icono-cerrada { background: rgba(136,136,136,0.1); color: var(--gris); }
+
+.v-convocatorias-gal .conv-card__titulo {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--negro);
+  margin-bottom: 0.2rem;
+}
+.v-convocatorias-gal .conv-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--gris);
+}
+.v-convocatorias-gal .conv-tipo {
+  text-transform: capitalize;
+  color: var(--terra);
+  font-weight: 500;
+}
+
+.v-convocatorias-gal .conv-card__der {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+.v-convocatorias-gal .conv-card__cierre {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--negro);
+}
+.v-convocatorias-gal .conv-card__rango {
+  font-size: 0.72rem;
+  color: var(--gris);
+  margin-top: 2px;
+}
+.v-convocatorias-gal .conv-card__postulaciones {
+  text-align: center;
+}
+.v-convocatorias-gal .post-pill {
+  display: inline-block;
+  background: rgba(193,68,14,0.08);
+  color: var(--terra);
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  min-width: 36px;
+}
+.v-convocatorias-gal .post-pill-label {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--gris);
+  margin-top: 2px;
+}
+
+.v-convocatorias-gal .conv-card__chevron {
+  width: 20px; height: 20px;
+  stroke: var(--gris); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform 0.2s;
+}
+.v-convocatorias-gal .conv-card--expandida .conv-card__chevron {
+  transform: rotate(180deg);
+}
+
+/* ── DETALLE EXPANDIDO ──────────────────────── */
+.v-convocatorias-gal .conv-card__detalle {
+  padding: 0 1.5rem 1.5rem;
+  border-top: 1px solid var(--borde-c);
+}
+.v-convocatorias-gal .detalle-desc,
+.v-convocatorias-gal .detalle-req {
+  padding-top: 1.25rem;
+}
+.v-convocatorias-gal .detalle-desc h4,
+.v-convocatorias-gal .detalle-req h4,
+.v-convocatorias-gal .detalle-postulaciones h4 {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--negro);
+  margin-bottom: 0.4rem;
+}
+.v-convocatorias-gal .detalle-desc p,
+.v-convocatorias-gal .detalle-req p {
+  font-size: 0.83rem;
+  color: var(--gris-c);
+  line-height: 1.5;
+}
+.v-convocatorias-gal .detalle-postulaciones {
+  padding-top: 1.25rem;
+}
+
+/* ── TABLA DE POSTULACIONES ─────────────────── */
+.v-convocatorias-gal .post-tabla {
+  margin-top: 0.75rem;
+}
+.v-convocatorias-gal .post-fila {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--borde-c);
+  gap: 0.75rem;
+}
+.v-convocatorias-gal .post-fila--head {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--gris);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--borde-c);
+}
+.v-convocatorias-gal .post-fila__artista {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--negro);
+}
+.v-convocatorias-gal .post-fila__av {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--blanco);
+  flex-shrink: 0;
+}
+.v-convocatorias-gal .post-fila__fecha {
+  font-size: 0.8rem;
+  color: var(--gris);
+}
+.v-convocatorias-gal .post-fila__acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.v-convocatorias-gal .post-fila__acciones select {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--borde-c);
+  border-radius: 6px;
+  font-family: var(--sans);
+  background: var(--blanco);
+  cursor: pointer;
+}
+.v-convocatorias-gal .sin-post {
+  font-size: 0.82rem;
+  color: var(--gris);
+  padding: 1rem 0;
+  font-style: italic;
+}
+
+/* ── BADGES ─────────────────────────────────── */
+.v-convocatorias-gal .badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--sans);
+}
+.v-convocatorias-gal .badge-enviada   { background: rgba(42,74,106,0.1); color: #2A4A6A; }
+.v-convocatorias-gal .badge-revision  { background: rgba(180,140,40,0.12); color: #8A6A10; }
+.v-convocatorias-gal .badge-aceptada  { background: rgba(58,106,42,0.1); color: #3A6A2A; }
+.v-convocatorias-gal .badge-rechazada { background: rgba(160,40,40,0.1); color: #8A2A2A; }
+
+/* ── MODAL ──────────────────────────────────── */
+.v-convocatorias-gal .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+.v-convocatorias-gal .modal {
+  background: var(--blanco);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.v-convocatorias-gal .modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 0;
+}
+.v-convocatorias-gal .modal__titulo {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.v-convocatorias-gal .modal__sub {
+  font-size: 0.82rem;
+  color: var(--gris);
+  margin-top: 0.2rem;
+}
+.v-convocatorias-gal .modal__cerrar {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--borde-c);
+  background: var(--blanco);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.v-convocatorias-gal .modal__cerrar:hover { background: var(--crema); }
+.v-convocatorias-gal .modal__cerrar svg {
+  width: 16px; height: 16px;
+  stroke: var(--negro); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.v-convocatorias-gal .modal__body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+.v-convocatorias-gal .modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--borde-c);
+}
+
+/* ── FORMULARIO ─────────────────────────────── */
+.v-convocatorias-gal .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.v-convocatorias-gal .fg-full { grid-column: 1 / -1; }
+.v-convocatorias-gal .campo label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--negro);
+  margin-bottom: 0.35rem;
+}
+.v-convocatorias-gal .req { color: var(--terra); }
+.v-convocatorias-gal .campo input,
+.v-convocatorias-gal .campo select,
+.v-convocatorias-gal .campo textarea {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--borde-c);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--negro);
+  background: var(--blanco);
+  transition: border-color 0.2s;
+}
+.v-convocatorias-gal .campo input:focus,
+.v-convocatorias-gal .campo select:focus,
+.v-convocatorias-gal .campo textarea:focus {
+  outline: none;
+  border-color: var(--terra);
+}
+.v-convocatorias-gal .campo textarea { min-height: 100px; resize: vertical; }
+.v-convocatorias-gal .campo .err { border-color: #c0392b; }
+.v-convocatorias-gal .campo__error {
+  display: block;
+  font-size: 0.72rem;
+  color: #c0392b;
+  margin-top: 0.25rem;
+}
+
+/* ── ESTADO VACÍO ───────────────────────────── */
+.v-convocatorias-gal .estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.v-convocatorias-gal .estado-vacio svg {
+  width: 48px; height: 48px;
+  stroke: var(--gris); fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+  margin-bottom: 1rem;
+  opacity: 0.4;
+}
+.v-convocatorias-gal .estado-vacio h3 {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--negro);
+  margin-bottom: 0.4rem;
+}
+.v-convocatorias-gal .estado-vacio p {
+  font-size: 0.85rem;
+  color: var(--gris);
+  margin-bottom: 1rem;
+}
+
+/* ── SPINNER ────────────────────────────────── */
+.v-convocatorias-gal .spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--borde-c);
+  border-top-color: var(--terra);
+  border-radius: 50%;
+  animation: spin-conv-gal 0.7s linear infinite;
+  margin-bottom: 1rem;
+}
+@keyframes spin-conv-gal { to { transform: rotate(360deg); } }
+
+/* ── MODAL DETALLE POSTULACIÓN ──────────────── */
+.v-convocatorias-gal .det-sec {
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--borde-c);
+}
+.v-convocatorias-gal .det-sec:last-child { border-bottom: none; margin-bottom: 0; }
+.v-convocatorias-gal .det-sec__t {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-bottom: 0.75rem;
+}
+.v-convocatorias-gal .det-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+.v-convocatorias-gal .det-l {
+  font-size: 0.75rem;
+  color: var(--gris);
+  margin-bottom: 0.2rem;
+}
+.v-convocatorias-gal .det-v {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--negro);
+}
+.v-convocatorias-gal .det-texto {
+  font-size: 0.85rem;
+  color: var(--gris-c);
+  line-height: 1.65;
+  background: var(--crema);
+  border: 1px solid var(--borde-c);
+  border-radius: 10px;
+  padding: 1.25rem;
+  white-space: pre-wrap;
+}
+.v-convocatorias-gal .det-link {
+  font-size: 0.85rem;
+  color: var(--terra);
+  text-decoration: underline;
+  word-break: break-all;
+}
+.v-convocatorias-gal .det-link:hover { color: var(--terra-h); }
+.v-convocatorias-gal .det-archivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--terra);
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  background: rgba(193,68,14,0.06);
+  border: 1px solid rgba(193,68,14,0.15);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.v-convocatorias-gal .det-archivo:hover { background: rgba(193,68,14,0.12); }
+.v-convocatorias-gal .det-obras {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+.v-convocatorias-gal .det-obra {
+  border: 1px solid var(--borde-c);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.v-convocatorias-gal .det-obra__img {
+  width: 100%;
+  height: 90px;
+}
+.v-convocatorias-gal .det-obra__t {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--negro);
+  padding: 0.4rem 0.6rem 0.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v-convocatorias-gal .det-obra__s {
+  font-size: 0.68rem;
+  color: var(--gris);
+  padding: 0 0.6rem 0.4rem;
+}
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 768px) {
+  .v-convocatorias-gal .topbar { padding: 1rem 1.25rem; }
+  .v-convocatorias-gal .contenido { padding: 1.25rem; }
+  .v-convocatorias-gal .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .v-convocatorias-gal .filtros-bar { flex-direction: column; align-items: stretch; }
+  .v-convocatorias-gal .busqueda-wrap { min-width: 100%; }
+  .v-convocatorias-gal .conv-card__main { flex-direction: column; align-items: flex-start; }
+  .v-convocatorias-gal .conv-card__der { width: 100%; justify-content: space-between; }
+  .v-convocatorias-gal .post-fila { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .v-convocatorias-gal .post-fila--head { display: none; }
+  .v-convocatorias-gal .form-grid { grid-template-columns: 1fr; }
+}

@@ -79,15 +79,6 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.nav-badge {
-  margin-left: auto;
-  background: var(--terra);
-  color: var(--blanco);
-  font-size: 0.63rem;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 10px;
-}
 
 .sidebar__perfil {
   padding: 1.1rem 1.5rem;
@@ -128,7 +119,7 @@
   color: rgba(255,255,255,0.32);
 }
 
-/* ── TOPBAR (compartido) ── */
+/* ── TOPBAR ── */
 .topbar {
   background: var(--blanco);
   border-bottom: 1px solid var(--borde);
@@ -144,38 +135,41 @@
 .topbar__izq {
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 .topbar__izq h1 {
   font-family: var(--serif);
   font-size: 1.35rem;
   font-weight: 700;
   color: var(--negro);
+  white-space: nowrap;
 }
-.topbar__izq p  { font-size: 0.82rem; color: var(--gris); }
-.topbar__der    { display: flex; align-items: center; gap: 0.75rem; }
+.topbar__izq p { font-size: 0.82rem; color: var(--gris); white-space: nowrap; }
+.topbar__der { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
 
-.topbar__notif {
-  position: relative;
-  width: 38px; height: 38px;
+/* ── BOTÓN VOLVER ── */
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
   border-radius: 8px;
   border: 1px solid var(--borde);
-  display: flex; align-items: center; justify-content: center;
-  background: var(--blanco); cursor: pointer; transition: background 0.2s;
+  background: var(--blanco);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  color: var(--gris-c);
+  margin-right: 0.75rem;
 }
-.topbar__notif:hover { background: var(--crema); }
-.topbar__notif svg {
-  width: 18px; height: 18px;
-  stroke: var(--gris-c); fill: none; stroke-width: 1.75;
-  stroke-linecap: round; stroke-linejoin: round;
-}
-.notif-dot {
-  position: absolute; top: 7px; right: 7px;
-  width: 7px; height: 7px;
-  background: var(--terra); border-radius: 50%;
-  border: 1.5px solid var(--blanco);
+.btn-volver:hover {
+  border-color: var(--negro);
+  color: var(--negro);
+  background: var(--crema);
 }
 
-/* ── BOTONES COMPARTIDOS ── */
+/* ── BOTONES ── */
 .btn-primary {
   display: inline-flex; align-items: center; gap: 0.4rem;
   padding: 0.55rem 1.1rem;
@@ -206,35 +200,9 @@
   stroke-linecap: round; stroke-linejoin: round;
 }
 
-/* ── BOTÓN VOLVER ── */
-.btn-volver {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1px solid var(--borde);
-  background: var(--blanco);
-  cursor: pointer;
-  transition: all 0.2s;
-  flex-shrink: 0;
-  color: var(--gris-c);
-  margin-right: 0.75rem;
-}
-.btn-volver:hover {
-  border-color: var(--negro);
-  color: var(--negro);
-  background: var(--crema);
-}
-
 /* ── HAMBURGUESA ── */
 .hamburguesa {
   display: none;
-  position: fixed;
-  top: 12px;
-  right: 16px;
-  z-index: 1001;
   width: 40px;
   height: 40px;
   border-radius: 8px;
@@ -246,6 +214,8 @@
   justify-content: center;
   gap: 5px;
   padding: 0;
+  flex-shrink: 0;
+  z-index: 1001;
 }
 .hamburguesa span {
   display: block;
@@ -270,8 +240,18 @@
   display: none;
 }
 
-/* ── RESPONSIVE ── */
+/* ══════════════════════════════════════════
+   RESPONSIVE MÓVIL
+══════════════════════════════════════════ */
 @media (max-width: 768px) {
+
+  /* Layout: una columna */
+  .layout {
+    grid-template-columns: 1fr !important;
+    overflow-x: hidden;
+  }
+
+  /* Sidebar como panel lateral */
   .sidebar {
     position: fixed;
     top: 0;
@@ -294,28 +274,109 @@
     z-index: 999;
   }
 
+  /* Hamburguesa visible, fixed en esquina derecha del topbar */
   .hamburguesa {
     display: flex;
+    position: fixed;
+    top: 8px;
+    right: 8px;
+    z-index: 1001;
   }
 
+  /* Topbar ajustado para móvil */
   .topbar {
-    padding: 0 3.5rem 0 1rem;
+    padding: 0 3.5rem 0 0.75rem;
     height: 56px;
+    gap: 0.5rem;
+    overflow: hidden;
   }
-  .topbar__izq h1 { font-size: 1.1rem; }
-  .topbar__izq p { font-size: 0.75rem; }
-  .topbar__der { gap: 0.5rem; }
-  .topbar__der .btn-sec span,
-  .topbar__der .btn-primary span {
+  .topbar__izq {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .topbar__izq h1 {
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .topbar__izq p {
+    display: none;
+  }
+  .topbar__der {
+    gap: 0.4rem;
+  }
+
+  /* En móvil ocultar texto de botones, solo mostrar iconos */
+  .topbar__der .btn-sec,
+  .topbar__der .btn-primary {
+    padding: 0.5rem;
+    font-size: 0;
+    gap: 0;
+  }
+  .topbar__der .btn-sec svg,
+  .topbar__der .btn-primary svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Botón volver más pequeño */
+  .btn-volver {
+    width: 30px;
+    height: 30px;
+    margin-right: 0.5rem;
+  }
+
+  /* Contenido no se desborda */
+  .main {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+  .contenido {
+    padding: 1rem !important;
+    overflow-x: hidden;
+  }
+
+  /* Stats mini en 2 columnas */
+  .stats-mini {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Filtros en columna */
+  .filtros-bar {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  .filtros-bar .search-wrap {
+    width: 100%;
+  }
+  .filtros-bar .filtro-select {
+    width: 100%;
+  }
+  .filtros-bar__sep {
     display: none;
   }
 
-  .layout {
-    grid-template-columns: 1fr !important;
+  /* Grid de obras a 1 columna en móvil pequeño */
+  .obras-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Modales full width en móvil */
+  .modal {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 1rem;
   }
 }
 
-@media (max-width: 480px) {
-  .topbar { padding: 0 3.5rem 0 0.75rem; }
-  .topbar__izq h1 { font-size: 1rem; }
+@media (max-width: 400px) {
+  .obras-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .topbar__izq h1 {
+    font-size: 0.9rem;
+  }
 }

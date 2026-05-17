@@ -1,6 +1,6 @@
 // =============================================
 // services/api.js — Conexión con el backend
-// ArtGest · Proyecto de Título 2026
+// ArteGest · Proyecto de Título 2026
 // =============================================
 
 import axios from 'axios'
@@ -332,6 +332,12 @@ export const usuariosAPI = {
   async listarFavoritos() {
     const { data } = await api.get('/usuarios/favoritos')
     return data.favoritos
+  },
+
+  // Listar todos los artistas (para Explorar artistas - galerista)
+  async listarArtistas() {
+    const { data } = await api.get('/usuarios/artistas')
+    return data.artistas
   }
 }
 

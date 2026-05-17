@@ -1,0 +1,359 @@
+/* =============================================
+   EXPLORAR ARTISTAS — Panel Galerista
+   Prefijo: .v-explorar-gal
+   ============================================= */
+
+/* ── LAYOUT ─────────────────────────────────── */
+.v-explorar-gal.layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--crema);
+}
+.v-explorar-gal .main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+}
+
+/* ── TOPBAR ─────────────────────────────────── */
+.v-explorar-gal .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  background: var(--blanco);
+  border-bottom: 1px solid var(--borde-c);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+.v-explorar-gal .topbar__izq h1 {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--negro);
+}
+.v-explorar-gal .topbar__izq p {
+  font-size: 0.82rem;
+  color: var(--gris);
+  margin-top: 2px;
+}
+.v-explorar-gal .topbar__der {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ── BOTONES REUTILIZABLES ──────────────────── */
+.v-explorar-gal .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--terra);
+  color: var(--blanco);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.v-explorar-gal .btn-primary:hover { background: var(--terra-h); }
+.v-explorar-gal .btn-primary svg {
+  width: 15px; height: 15px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.v-explorar-gal .btn-sec {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--blanco);
+  color: var(--negro);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid var(--borde-c);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.v-explorar-gal .btn-sec:hover { background: var(--crema); }
+.v-explorar-gal .btn-sec svg {
+  width: 15px; height: 15px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.v-explorar-gal .btn-sm {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.78rem;
+}
+
+/* ── CONTENIDO ──────────────────────────────── */
+.v-explorar-gal .contenido {
+  padding: 1.5rem 2.5rem;
+  flex: 1;
+}
+
+/* ── FILTROS ────────────────────────────────── */
+.v-explorar-gal .filtros-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.v-explorar-gal .busqueda-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--blanco);
+  border: 1px solid var(--borde-c);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  flex: 1;
+  min-width: 260px;
+}
+.v-explorar-gal .busqueda-wrap svg {
+  width: 18px; height: 18px;
+  stroke: var(--gris); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.v-explorar-gal .busqueda-wrap input {
+  border: none;
+  outline: none;
+  font-size: 0.88rem;
+  font-family: var(--sans);
+  color: var(--negro);
+  background: transparent;
+  width: 100%;
+}
+.v-explorar-gal .busqueda-wrap input::placeholder { color: var(--gris); }
+
+.v-explorar-gal .filtros-selects {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.v-explorar-gal .filtros-selects select {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--borde-c);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--negro);
+  background: var(--blanco);
+  cursor: pointer;
+  appearance: auto;
+}
+
+.v-explorar-gal .btn-limpiar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.8rem;
+  color: var(--terra);
+  background: rgba(193,68,14,0.08);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.v-explorar-gal .btn-limpiar:hover { background: rgba(193,68,14,0.14); }
+.v-explorar-gal .btn-limpiar svg {
+  width: 14px; height: 14px;
+  stroke: var(--terra); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.v-explorar-gal .resultados-txt {
+  font-size: 0.82rem;
+  color: var(--gris);
+  margin-bottom: 1rem;
+}
+
+/* ── GRID DE ARTISTAS ───────────────────────── */
+.v-explorar-gal .artistas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ── CARD ARTISTA ───────────────────────────── */
+.v-explorar-gal .artista-card {
+  background: var(--blanco);
+  border-radius: 12px;
+  border: 1px solid var(--borde-c);
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.v-explorar-gal .artista-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.v-explorar-gal .artista-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem 0;
+}
+.v-explorar-gal .artista-card__avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--blanco);
+  flex-shrink: 0;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.v-explorar-gal .btn-fav {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--borde-c);
+  background: var(--blanco);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.v-explorar-gal .btn-fav svg {
+  width: 18px; height: 18px;
+  stroke: var(--gris); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  transition: all 0.2s;
+}
+.v-explorar-gal .btn-fav:hover { border-color: var(--terra); }
+.v-explorar-gal .btn-fav:hover svg { stroke: var(--terra); }
+.v-explorar-gal .btn-fav--activo {
+  background: rgba(193,68,14,0.08);
+  border-color: var(--terra);
+}
+.v-explorar-gal .btn-fav--activo svg {
+  stroke: var(--terra);
+  fill: var(--terra);
+}
+
+.v-explorar-gal .artista-card__body {
+  padding: 1rem 1.25rem;
+}
+.v-explorar-gal .artista-card__nombre {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--negro);
+  margin-bottom: 0.3rem;
+}
+.v-explorar-gal .artista-card__disc {
+  font-size: 0.82rem;
+  color: var(--terra);
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+.v-explorar-gal .artista-card__ubicacion {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--gris);
+  margin-bottom: 0.5rem;
+}
+.v-explorar-gal .artista-card__ubicacion svg {
+  width: 13px; height: 13px;
+  stroke: var(--gris); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.v-explorar-gal .artista-card__bio {
+  font-size: 0.8rem;
+  color: var(--gris-c);
+  line-height: 1.45;
+}
+
+.v-explorar-gal .artista-card__stats {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--borde-c);
+  border-bottom: 1px solid var(--borde-c);
+  font-size: 0.78rem;
+  color: var(--gris);
+}
+.v-explorar-gal .artista-card__stats strong {
+  color: var(--negro);
+  font-weight: 600;
+}
+
+.v-explorar-gal .artista-card__acciones {
+  display: flex;
+  gap: 0.6rem;
+  padding: 1rem 1.25rem;
+}
+.v-explorar-gal .artista-card__acciones .btn-sec,
+.v-explorar-gal .artista-card__acciones .btn-primary {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ── ESTADO VACÍO ───────────────────────────── */
+.v-explorar-gal .estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.v-explorar-gal .estado-vacio svg {
+  width: 48px; height: 48px;
+  stroke: var(--gris); fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+  margin-bottom: 1rem;
+  opacity: 0.4;
+}
+.v-explorar-gal .estado-vacio h3 {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--negro);
+  margin-bottom: 0.4rem;
+}
+.v-explorar-gal .estado-vacio p {
+  font-size: 0.85rem;
+  color: var(--gris);
+  margin-bottom: 1rem;
+}
+
+/* ── SPINNER ────────────────────────────────── */
+.v-explorar-gal .spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--borde-c);
+  border-top-color: var(--terra);
+  border-radius: 50%;
+  animation: spin-expl 0.7s linear infinite;
+  margin-bottom: 1rem;
+}
+@keyframes spin-expl { to { transform: rotate(360deg); } }
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 768px) {
+  .v-explorar-gal .topbar { padding: 1rem 1.25rem; }
+  .v-explorar-gal .topbar__der { display: none; }
+  .v-explorar-gal .contenido { padding: 1.25rem; }
+  .v-explorar-gal .filtros-bar { flex-direction: column; }
+  .v-explorar-gal .busqueda-wrap { min-width: 100%; }
+  .v-explorar-gal .filtros-selects { width: 100%; flex-wrap: wrap; }
+  .v-explorar-gal .filtros-selects select { flex: 1; min-width: 120px; }
+  .v-explorar-gal .artistas-grid { grid-template-columns: 1fr; }
+}

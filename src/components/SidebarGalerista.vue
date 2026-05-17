@@ -48,7 +48,8 @@
     </nav>
 
     <div class="sidebar__perfil">
-      <div class="s-av" style="background:#2A4A6A;">{{ iniciales }}</div>
+      <img v-if="fotoUrl" :src="fotoUrl" class="s-av-img" />
+      <div v-else class="s-av" style="background:#2A4A6A;">{{ iniciales }}</div>
       <div class="sidebar__perfil-info">
         <p>{{ nombreUsuario }}</p>
         <p>Galerista / Curador</p>
@@ -77,13 +78,15 @@ const router = useRouter()
 const menuAbierto = ref(false)
 const nombreUsuario = ref('Galerista')
 const iniciales = ref('GA')
+const fotoUrl = ref('')
 
 onMounted(() => {
   const u = authAPI.getUsuario()
   if (u) {
     nombreUsuario.value = u.nombreGaleria || u.nombre || 'Galerista'
-    const name = u.nombre || 'GA'
+    const name = u.nombreGaleria || u.nombre || 'GA'
     iniciales.value = name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()
+    fotoUrl.value = u.fotoUrl || ''
   }
 })
 

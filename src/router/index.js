@@ -19,7 +19,10 @@ import MensajeriaView       from '@/views/MensajeriaView.vue'
 import PerfilView           from '@/views/artista/PerfilView.vue'
 
 // ── VISTAS GALERISTA ─────────────────────────────────
-import DashboardGaleristaView from '@/views/galerista/DashboardGaleristaView.vue'
+import DashboardGaleristaView       from '@/views/galerista/DashboardGaleristaView.vue'
+import ExplorarArtistasView         from '@/views/galerista/ExplorarArtistasView.vue'
+import MisConvocatoriasGaleristaView from '@/views/galerista/MisConvocatoriasGaleristaView.vue'
+import PerfilGaleristaView          from '@/views/galerista/PerfilGaleristaView.vue'
 
 const routes = [
   // ── PÚBLICAS ──
@@ -102,9 +105,27 @@ const routes = [
     meta: { requiereAuth: true, perfil: 'galerista' }
   },
   {
+    path: '/galerista/explorar',
+    name: 'galerista-explorar',
+    component: ExplorarArtistasView,
+    meta: { requiereAuth: true, perfil: 'galerista' }
+  },
+  {
+    path: '/galerista/convocatorias',
+    name: 'galerista-convocatorias',
+    component: MisConvocatoriasGaleristaView,
+    meta: { requiereAuth: true, perfil: 'galerista' }
+  },
+  {
     path: '/galerista/mensajes',
     name: 'galerista-mensajes',
     component: MensajeriaView,
+    meta: { requiereAuth: true, perfil: 'galerista' }
+  },
+  {
+    path: '/galerista/perfil',
+    name: 'galerista-perfil',
+    component: PerfilGaleristaView,
     meta: { requiereAuth: true, perfil: 'galerista' }
   },
 
@@ -145,7 +166,7 @@ router.beforeEach((to, from, next) => {
   // Sin token: redirige a login
   if (!token) return next('/login')
 
-  // Ruta requiere perfil específico y no coincide
+  // Ruta con perfil especifico
   if (to.meta.perfil && to.meta.perfil !== perfil) {
     return next(perfil === 'galerista' ? '/galerista/dashboard' : '/artista/dashboard')
   }
