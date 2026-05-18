@@ -10,10 +10,10 @@
           <p>{{ fechaHoy }}</p>
         </div>
         <div class="topbar__der">
-          <div class="topbar__notif">
+          <router-link to="/artista/mensajes" class="topbar__notif">
             <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-            <span class="notif-dot"></span>
-          </div>
+            <span class="notif-dot" v-if="mensajes.some(m => m.noLeido)"></span>
+          </router-link>
           <router-link to="/artista/inventario" class="btn-nuevo">
             <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Nueva obra
@@ -125,7 +125,9 @@
               </div>
               <div class="msgs">
                 <div class="msg-item" :class="{ 'no-leido': m.noLeido }" v-for="m in mensajes" :key="m.id">
-                  <div class="msg-avatar" :style="{ background: m.color }">{{ m.ini }}</div>
+                  <div class="msg-avatar" :style="{ background: m.fotoUrl ? `url(${m.fotoUrl}) center/cover` : m.color }">
+                    <span v-if="!m.fotoUrl">{{ m.ini }}</span>
+                  </div>
                   <div class="msg-info">
                     <p class="msg-titulo">{{ m.nombre }}</p>
                     <p class="msg-preview">{{ m.preview }}</p>
@@ -207,18 +209,15 @@ const accesos = ref([
 // ── CARGAR DATOS REALES ──
 onMounted(async () => {
   try {
-    // Obtener perfil completo
     const me = await authAPI.me()
     usuario.value.nombre = me.nombre
 
-    // Calcular progreso del perfil
     const campos = ['nombre', 'email', 'bio', 'fotoUrl', 'region', 'sitioWeb', 'instagram']
     const completados = campos.filter(c => me[c] && me[c].length > 0).length
     const disciplinasOk = me.disciplinas && me.disciplinas.length > 0 ? 1 : 0
     progresoPerfil.value = Math.round(((completados + disciplinasOk) / (campos.length + 1)) * 100)
     camposFaltantes.value = campos.filter(c => !me[c] || me[c].length === 0)
 
-    // Obtener obras (stats + recientes)
     const obrasData = await obrasAPI.listar()
     stats.value[0].valor = String(obrasData.stats.total)
     stats.value[0].delta = obrasData.stats.total > 0 ? `${obrasData.stats.total} obras` : 'Sin obras aún'
@@ -227,7 +226,6 @@ onMounted(async () => {
     stats.value[3].valor = String(obrasData.stats.vendidas)
     stats.value[3].delta = obrasData.stats.vendidas > 0 ? `${obrasData.stats.vendidas} vendidas` : '—'
 
-    // Obras recientes (últimas 4)
     obrasRecientes.value = obrasData.obras.slice(0, 4).map(o => ({
       id: o._id,
       titulo: o.titulo,
@@ -243,7 +241,6 @@ onMounted(async () => {
   }
 
   try {
-    // Obtener postulaciones
     const posts = await postulacionesAPI.listar()
     stats.value[2].valor = String(posts.length)
     stats.value[2].delta = posts.length > 0 ? `${posts.length} postulaciones` : '—'
@@ -265,7 +262,6 @@ onMounted(async () => {
   }
 
   try {
-    // Obtener mensajes recientes
     const convs = await mensajesAPI.conversaciones()
     const colores = ['#2A4A6A', '#3A6A2A', '#6A2A3A', '#4A3A6A', '#6A4A2A']
 
@@ -273,6 +269,7 @@ onMounted(async () => {
       id: c.conversacionId,
       ini: c.otroUsuario?.nombre ? c.otroUsuario.nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : '??',
       color: colores[i % colores.length],
+      fotoUrl: c.otroUsuario?.fotoUrl || '',
       nombre: c.otroUsuario?.nombre || 'Usuario',
       preview: c.ultimoMensaje ? (c.ultimoMensaje.length > 40 ? c.ultimoMensaje.slice(0, 40) + '…' : c.ultimoMensaje) : '',
       hora: new Date(c.fecha).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }),
