@@ -355,7 +355,10 @@ const cargando = ref(false)
 const errorMsg = ref('')
 
 const tecnicas = ['Óleo sobre tela','Óleo sobre madera','Acrílico sobre tela','Acuarela','Grabado en metal','Grabado en madera','Fotografía análoga','Fotografía digital','Arte digital','Cerámica','Escultura','Técnica mixta','Otra']
-const anios    = [2026,2025,2024,2023,2022,2021,2020]
+const anios = computed(() => {
+  const set = new Set(obras.value.map(o => o.anio).filter(a => a))
+  return [...set].sort((a, b) => b - a)
+})
 
 // ── CARGAR OBRAS ──────────────────────────────────────
 async function cargarObras() {
