@@ -25,6 +25,15 @@ import ExplorarArtistasView         from '@/views/galerista/ExplorarArtistasView
 import MisConvocatoriasGaleristaView from '@/views/galerista/MisConvocatoriasGaleristaView.vue'
 import PerfilGaleristaView          from '@/views/galerista/PerfilGaleristaView.vue'
 
+// ── HELPERS ──────────────────────────────────────────
+function getToken() {
+  return localStorage.getItem('token') || sessionStorage.getItem('token')
+}
+
+function getPerfil() {
+  return localStorage.getItem('perfil') || sessionStorage.getItem('perfil') || ''
+}
+
 const routes = [
   // ── PÚBLICAS ──
   {
@@ -140,7 +149,7 @@ const routes = [
   {
     path: '/dashboard',
     redirect: () => {
-      const perfil = localStorage.getItem('perfil') || 'artista'
+      const perfil = getPerfil()
       return perfil === 'galerista' ? '/galerista/dashboard' : '/artista/dashboard'
     }
   },
@@ -164,16 +173,14 @@ const router = createRouter({
 
 // ── GUARD DE NAVEGACIÓN ──────────────────────────────
 router.beforeEach((to, from, next) => {
-  const token  = localStorage.getItem('token')
-  const perfil = localStorage.getItem('perfil')
+  const token  = getToken()
+  const perfil = getPerfil()
 
-  // Ruta pública: siempre permite
   if (to.meta.publica) return next()
 
-  // Sin token: redirige a login
+
   if (!token) return next('/login')
 
-  // Ruta requiere perfil específico y no coincide
   if (to.meta.perfil && to.meta.perfil !== perfil) {
     return next(perfil === 'galerista' ? '/galerista/dashboard' : '/artista/dashboard')
   }

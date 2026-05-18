@@ -5,6 +5,48 @@
 
 import axios from 'axios'
 
+// ── HELPERS DE STORAGE ──────────────────────────────
+// Si el usuario marcó "recordar", se usa localStorage (persiste).
+// Si no, se usa sessionStorage (se borra al cerrar el navegador).
+function getStorage() {
+  // Si existe en localStorage, usar localStorage
+  if (localStorage.getItem('token')) return localStorage
+  // Si existe en sessionStorage, usar sessionStorage
+  if (sessionStorage.getItem('token')) return sessionStorage
+  // Default: localStorage
+  return localStorage
+}
+
+function getToken() {
+  return localStorage.getItem('token') || sessionStorage.getItem('token')
+}
+
+function getUsuarioStr() {
+  return localStorage.getItem('usuario') || sessionStorage.getItem('usuario')
+}
+
+function getPerfil() {
+  return localStorage.getItem('perfil') || sessionStorage.getItem('perfil') || ''
+}
+
+function guardarSesion(data, recordar = true) {
+  // Limpiar ambos storages primero
+  limpiarSesion()
+  const storage = recordar ? localStorage : sessionStorage
+  storage.setItem('token', data.token)
+  storage.setItem('usuario', JSON.stringify(data.usuario))
+  storage.setItem('perfil', data.usuario.tipoUsuario)
+}
+
+function limpiarSesion() {
+  localStorage.removeItem('token')
+  localStorage.removeItem('usuario')
+  localStorage.removeItem('perfil')
+  sessionStorage.removeItem('token')
+  sessionStorage.removeItem('usuario')
+  sessionStorage.removeItem('perfil')
+}
+
 // Instancia base de axios
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
@@ -14,7 +56,7 @@ const api = axios.create({
 
 // ── INTERCEPTOR: agrega el token JWT a cada petición ──
 api.interceptors.request.use(config => {
-  const token = localStorage.getItem('token')
+  const token = getToken()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -26,9 +68,7 @@ api.interceptors.response.use(
   response => response,
   error => {
     if (error.response && error.response.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('usuario')
-      localStorage.removeItem('perfil')
+      limpiarSesion()
       window.location.href = '/login'
     }
     return Promise.reject(error)
@@ -40,22 +80,17 @@ api.interceptors.response.use(
 // ══════════════════════════════════════════
 
 export const authAPI = {
-  // Login
-  async login(email, contrasena) {
+  // Login (recibe recordar para decidir storage)
+  async login(email, contrasena, recordar = true) {
     const { data } = await api.post('/auth/login', { email, contrasena })
-    // Guardar token y datos del usuario en localStorage
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('usuario', JSON.stringify(data.usuario))
-    localStorage.setItem('perfil', data.usuario.tipoUsuario)
+    guardarSesion(data, recordar)
     return data
   },
 
-  // Registro
+  // Registro (siempre persiste como localStorage)
   async registro(nombre, email, contrasena, tipoUsuario) {
     const { data } = await api.post('/auth/registro', { nombre, email, contrasena, tipoUsuario })
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('usuario', JSON.stringify(data.usuario))
-    localStorage.setItem('perfil', data.usuario.tipoUsuario)
+    guardarSesion(data, true)
     return data
   },
 
@@ -67,24 +102,22 @@ export const authAPI = {
 
   // Cerrar sesión
   logout() {
-    localStorage.removeItem('token')
-    localStorage.removeItem('usuario')
-    localStorage.removeItem('perfil')
+    limpiarSesion()
     window.location.href = '/login'
   },
 
   // Helpers
   estaAutenticado() {
-    return !!localStorage.getItem('token')
+    return !!getToken()
   },
 
   getUsuario() {
-    const u = localStorage.getItem('usuario')
+    const u = getUsuarioStr()
     return u ? JSON.parse(u) : null
   },
 
   getPerfil() {
-    return localStorage.getItem('perfil') || ''
+    return getPerfil()
   }
 }
 
@@ -100,7 +133,7 @@ export const obrasAPI = {
     if (filtros.busqueda) params.busqueda = filtros.busqueda
     if (filtros.orden) params.orden = filtros.orden
     const { data } = await api.get('/obras', { params })
-    return data // { obras: [...], stats: { total, disponibles, reservadas, vendidas } }
+    return data
   },
 
   // Detalle de una obra
@@ -240,7 +273,7 @@ export const mensajesAPI = {
   // Obtener mensajes de una conversación
   async obtenerMensajes(receptorId) {
     const { data } = await api.get(`/mensajes/${receptorId}`)
-    return data // { mensajes: [...], conversacionId }
+    return data
   },
 
   // Enviar mensaje
@@ -258,7 +291,7 @@ export const certificadosAPI = {
   // Listar certificados del artista
   async listar() {
     const { data } = await api.get('/certificados')
-    return data // { ventas: [...], stats: { total, verificados, montoTotal } }
+    return data
   },
 
   // Registrar venta y generar certificado
@@ -297,8 +330,9 @@ export const usuariosAPI = {
     const { data } = await api.put('/usuarios/perfil', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
-    // Actualizar localStorage con datos nuevos
-    localStorage.setItem('usuario', JSON.stringify(data.usuario))
+    // Actualizar storage con datos nuevos
+    const storage = getStorage()
+    storage.setItem('usuario', JSON.stringify(data.usuario))
     return data
   },
 
@@ -309,17 +343,18 @@ export const usuariosAPI = {
     const { data } = await api.put('/usuarios/banner', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
-    // Actualizar localStorage
-    const u = JSON.parse(localStorage.getItem('usuario') || '{}')
+    // Actualizar storage
+    const storage = getStorage()
+    const u = JSON.parse(storage.getItem('usuario') || '{}')
     u.bannerUrl = data.bannerUrl
-    localStorage.setItem('usuario', JSON.stringify(u))
+    storage.setItem('usuario', JSON.stringify(u))
     return data
   },
 
   // Perfil público de un artista
   async perfilPublico(id) {
     const { data } = await api.get(`/usuarios/perfil-publico/${id}`)
-    return data // { artista, stats }
+    return data
   },
 
   // Toggle favorito (galerista)

@@ -216,6 +216,12 @@ onMounted(() => {
     panelActivo.value = 'registro'
     reg.value.perfil  = 'galerista'
   }
+
+  // Si ya está autenticado, redirigir al dashboard
+  if (authAPI.estaAutenticado()) {
+    const perfil = authAPI.getPerfil()
+    router.replace(perfil === 'galerista' ? '/galerista/dashboard' : '/artista/dashboard')
+  }
 })
 
 // ── ESTADO ──────────────────────────────────────────
@@ -257,7 +263,8 @@ async function submitLogin() {
 
   cargando.value = true
   try {
-    const data = await authAPI.login(login.value.email.trim(), login.value.pass)
+    // ← Ahora pasa login.recordar para decidir localStorage vs sessionStorage
+    const data = await authAPI.login(login.value.email.trim(), login.value.pass, login.value.recordar)
     redirigirPorPerfil(data.usuario.tipoUsuario)
   } catch (error) {
     errorServidor.value = error.response?.data?.mensaje || 'Error al iniciar sesión. Intenta de nuevo.'
