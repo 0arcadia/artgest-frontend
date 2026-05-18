@@ -504,4 +504,7 @@
   .v-home .hero__bots{ flex-direction: column; align-items: center; }
   .v-home .btn{ width: 100%; max-width: 320px; justify-content: center; }
   .v-home .s-obras__head{ flex-direction: column; align-items: flex-start; }
+  .v-home .hero{ height: auto; min-height: 100svh; padding: 7rem 1.5rem 4rem;}
+.v-home .hero__scroll{ display: none; }
+.v-home .hero__titulo{ font-size: clamp(2.5rem, 12vw, 4rem);}
 }
