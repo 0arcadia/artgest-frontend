@@ -245,6 +245,10 @@ onMounted(async () => {
         ? `url(${o.imagenUrl}) center/cover`
         : 'linear-gradient(135deg,#888,#444)'
     }))
+   
+    // Actualizar stat de ventas con las obras vendidas
+    artista.value.stats[2].num = String(obras.value.filter(o => o.disp === 'vendida').length)
+    
   } catch (err) {
     console.error('Error cargando obras:', err)
   }
